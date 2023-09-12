@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 11:46:28 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/09/12 15:56:14 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/09/12 16:13:36 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ static void	parse_philo(int i, t_philo *philo, t_monastery *data)
 	share_forks(philo, data->forks, data->n_philo);
 	share_mutex(philo, data->mutex, data->n_philo);
 	philo->is_turn = assign_to_group(philo->id, data->n_philo);
+	philo->n_cycles = 0;
 }
 
 static t_philo	**create_philo(t_monastery *data)
@@ -107,7 +108,10 @@ int	parse_monastery(t_monastery *data, char **argv)
 	data->time->eat = ft_atoi(argv[3]) * 1000;
 	data->time->sleep = ft_atoi(argv[4]) * 1000;
 	if (argv[5])
-		data->time->n_cycles = ft_atoi(argv[5]);
+		data->time->limit = ft_atoi(argv[5]);
+	else
+		data->time->limit = 0; // remove if not important
+
 
 	// FORKS
 	data->forks = ft_calloc(data->n_philo, sizeof(int));
@@ -116,7 +120,7 @@ int	parse_monastery(t_monastery *data, char **argv)
 	i = 0;
 	while (i < data->n_philo)
 	{
-		data->forks[i] = i; // ------------- giving an id to the forks just to recognize!
+		data->forks[i] = 0; // ------------- giving an id to the forks just to recognize!
 		i++;
 	}
 

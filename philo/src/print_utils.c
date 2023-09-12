@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 09:05:42 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/09/12 15:55:36 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/09/12 16:25:55 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,29 @@ void	ft_putnbr_fd(int n, int fd)
 	}
 }
 
-void	print_philo(t_philo *philo)
+void	print_single_philo(t_philo *philo)
 {
+
 	if (!philo)
 		return ;
 	if (philo->is_turn == 1)
-		printf("__PHILO [%d][group %d]__\n", (philo->id), philo->is_turn);
+		printf("[%d]__PHILO__[group %d]__\n", (philo->id), philo->is_turn);
 	else
-		printf("__PHILO [%d][group %d]__\n", (philo->id), philo->is_turn);
-	printf("forks: [%d] < [%c] > [%d]\n\n", *(philo->fork[0]), (philo->id) + 96, *(philo->fork[1]));
+		printf("[%d]__PHILO__[group %d]__\n", (philo->id), philo->is_turn);
+	printf("forks: [%d] < [%c] > [%d]\n", *(philo->fork[0]), (philo->id) + 96, *(philo->fork[1]));
+	printf("n_cycles: [%d]\n\n", philo->n_cycles);
+}
+
+void	print_all_philo(t_philo **philo)
+{
+	int	i;
+
+	if (!philo)
+		return ;
+	i = 0;
+	while (philo[i])
+	{
+		print_single_philo(philo[i]);
+		i++;
+	}
 }

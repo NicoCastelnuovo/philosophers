@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 08:55:40 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/09/12 15:52:56 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/09/12 16:08:24 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef struct s_time
 	int			eat;
 	int			sleep;
 	long int	start;
-	int			n_cycles;
+	int			limit;
 }				t_time;
 
 typedef struct s_philo
@@ -41,6 +41,7 @@ typedef struct s_philo
 	int				id;
 	struct s_time	*time;
 	int				is_turn;		// [0] start - [1] queued
+	int				n_cycles;
 	int				*fork[2];	// maybe remove
 	pthread_mutex_t	*mutex[2];
 }				t_philo;
@@ -78,6 +79,7 @@ void	ft_putchar_fd(char c, int fd);
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
-void	print_philo(t_philo *philo);
+void	print_single_philo(t_philo *philo);
+void	print_all_philo(t_philo **philo);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 08:57:48 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/09/12 15:55:49 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/09/12 16:13:32 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,8 @@ int	main(int argc, char **argv)
 	err_code = parse_monastery(&data, argv); // make err_code an internal to t_monastery
 	if (err_code)
 		return (err_code);
-	print_philo(data.philo[0]);
-	print_philo(data.philo[1]);
-	print_philo(data.philo[2]);
-	print_philo(data.philo[3]);
-	print_philo(data.philo[4]);
+
+	print_all_philo(data.philo); // remove
 
 	// align start time
 	data.time->start = get_ms();
@@ -39,5 +36,7 @@ int	main(int argc, char **argv)
 	err_code = join_threads(&data);
 	if (err_code)
 		return (err_code);
+
+	print_all_philo(data.philo); // remove
 	return (0);
 }
