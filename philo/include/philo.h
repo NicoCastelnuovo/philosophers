@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 08:55:40 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/09/12 15:02:08 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/09/12 15:52:56 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <sys/time.h>
 # include <errno.h>
 # include <stdio.h>
-# include <libc.h>		// memset
+# include <libc.h>		// memset used in ft_calloc
 
 # define EARGC				1
 # define EMALLOC			2
@@ -29,38 +29,40 @@
 
 typedef struct s_time
 {
-	int			die;
+	int			health;
 	int			eat;
 	int			sleep;
 	long int	start;
-	int			end;
+	int			n_cycles;
 }				t_time;
 
 typedef struct s_philo
 {
 	int				id;
 	struct s_time	*time;
-	int				turn;	// set to 1 if part of the starting group
-	int				*fork[2];
+	int				is_turn;		// [0] start - [1] queued
+	int				*fork[2];	// maybe remove
 	pthread_mutex_t	*mutex[2];
 }				t_philo;
 
 typedef struct s_monastery
 {
-	int				n_philo;		// total n of philo/forks
-	struct s_philo	**philo;		// dptr to the philosophers
+	int				n_philo;
+	struct s_philo	**philo;
 	struct s_time	*time;
-	pthread_t		*th;			// ptr to the threads
-	int				*forks;			// ptr to the forks
+	pthread_t		*th;
+	int				*forks;		// maybe remove - but useful for visualize
 	pthread_mutex_t	*mutex;
 }				t_monastery;
 
 // -------------------------------------------------------------------- PARSING
 int		parse_monastery(t_monastery *data, char **argv);
 
-// -------------------------------------------------------------------- JOIN_TH
+// -------------------------------------------------------------------- THREADS
 int		create_threads(t_monastery *data);
 int		join_threads(t_monastery *data);
+void	*starters(void *arg);
+void	*queued(void *arg);
 
 // ----------------------------------------------------------------------- TIME
 long int	get_ms(void);
@@ -76,6 +78,6 @@ void	ft_putchar_fd(char c, int fd);
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
-void	print_state(t_philo *philo);
+void	print_philo(t_philo *philo);
 
 #endif

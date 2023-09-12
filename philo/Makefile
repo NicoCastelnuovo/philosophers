@@ -6,16 +6,17 @@
 #    By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/08 08:58:13 by ncasteln          #+#    #+#              #
-#    Updated: 2023/09/11 17:30:59 by ncasteln         ###   ########.fr        #
+#    Updated: 2023/09/12 15:37:33 by ncasteln         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
-CFLAGS = -g -pthread -Wall -Wextra #-Werror #or -pthread
+CFLAGS = -g -pthread -Wall -Wextra #-Werror #or -lpthread
 
 # ------------------------------------------------------------------------- SRC
 SRC = main.c \
 	threads.c \
+	routines.c \
 	time.c \
 	parsing.c \
 	utils.c \

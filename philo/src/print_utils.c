@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 09:05:42 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/09/12 14:54:12 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/09/12 15:55:36 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,19 +70,13 @@ void	ft_putnbr_fd(int n, int fd)
 	}
 }
 
-void	print_state(t_philo *philo)
+void	print_philo(t_philo *philo)
 {
 	if (!philo)
 		return ;
-	printf("[%d]\n", philo->id);
-	if (philo->turn == 0)
-		printf("__PHILO [%c][%s 0]__\n", (philo->id) + 96, "starter");
+	if (philo->is_turn == 1)
+		printf("__PHILO [%d][group %d]__\n", (philo->id), philo->is_turn);
 	else
-		printf("__PHILO [%c][%s 1]__\n", (philo->id) + 96, "queued");
-	printf("%d %d has taken a fork\n", 0, philo->id);
-	printf("%d %d is eating\n", 0, philo->id);
-	printf("%d %d is sleeping\n", 0, philo->id);
-	printf("%d %d is thinking\n", 0, philo->id);
-	printf("%d %d died\n", 0, philo->id);
+		printf("__PHILO [%d][group %d]__\n", (philo->id), philo->is_turn);
 	printf("forks: [%d] < [%c] > [%d]\n\n", *(philo->fork[0]), (philo->id) + 96, *(philo->fork[1]));
 }
