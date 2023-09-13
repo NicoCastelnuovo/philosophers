@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 15:40:28 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/09/12 16:26:04 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/09/13 16:16:56 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,17 @@ int create_threads(t_monastery *data)
 
 	i = 0;
 	err_code = 0;
+	if (pthread_create(&data->master, NULL, supervision, data))
+		return (error(ECREATE_THREAD, __FILE__, __LINE__));
 	while (i < data->n_philo)
 	{
 		if (data->philo[i]->is_turn == 1)
 		{
-			if (pthread_create(data->th + i, NULL, starters, data->philo[i]))
+			if (pthread_create(data->th + i, NULL, routine, data->philo[i]))
 				return (error(ECREATE_THREAD, __FILE__, __LINE__));
 		}
 		else if (data->philo[i]->is_turn == 0)
-			if (pthread_create(data->th + i, NULL, queued, data->philo[i]))
+			if (pthread_create(data->th + i, NULL, routine, data->philo[i]))
 				return (error(ECREATE_THREAD, __FILE__, __LINE__));
 		i++;
 	}

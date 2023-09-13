@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 11:46:28 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/09/12 16:13:36 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/09/13 16:19:18 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@
 static int	assign_to_group(int id, int n)
 {
 	if (n % 2 != 0 && id == n)
-		return (1);
-	if (id % 2 == 0)
-		return (1);
-	else
 		return (0);
+	if (id % 2 == 0)
+		return (0);
+	else
+		return (1);
 }
 
 static void	*share_forks(t_philo *philo, int *forks, int n_philo)
@@ -59,6 +59,9 @@ static void	parse_philo(int i, t_philo *philo, t_monastery *data)
 	share_mutex(philo, data->mutex, data->n_philo);
 	philo->is_turn = assign_to_group(philo->id, data->n_philo);
 	philo->n_cycles = 0;
+	philo->start_eat = 0; // /????
+	philo->start_think = 0; // /????
+	philo->end_think = 0; // /????
 }
 
 static t_philo	**create_philo(t_monastery *data)
@@ -104,13 +107,14 @@ int	parse_monastery(t_monastery *data, char **argv)
 	data->time = ft_calloc(1, sizeof(t_time));
 	if (!data->time)
 		return (error(EMALLOC, __FILE__, __LINE__));
-	data->time->health = ft_atoi(argv[2]) * 1000;
-	data->time->eat = ft_atoi(argv[3]) * 1000;
-	data->time->sleep = ft_atoi(argv[4]) * 1000;
+	data->time->health = ft_atoi(argv[2]); // * 1000;
+	data->time->eat = ft_atoi(argv[3]); // * 1000;
+	data->time->sleep = ft_atoi(argv[4]); // * 1000;
 	if (argv[5])
 		data->time->limit = ft_atoi(argv[5]);
 	else
 		data->time->limit = 0; // remove if not important
+	data->time->start = 0;
 
 
 	// FORKS

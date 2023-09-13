@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 08:55:40 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/09/12 16:08:24 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/09/13 16:22:39 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,21 +26,25 @@
 # define ETHJOIN			4
 # define EMUTEX				5
 # define ECREATE_PHILO		6
+# define EGET_TIME			7
 
 typedef struct s_time
 {
 	int			health;
 	int			eat;
 	int			sleep;
-	long int	start;
+	uint64_t	start;
 	int			limit;
 }				t_time;
 
 typedef struct s_philo
 {
-	int				id;
+	int				id;			// set to -1 if die
 	struct s_time	*time;
-	int				is_turn;		// [0] start - [1] queued
+	uint64_t		start_eat;
+	uint64_t		start_think;
+	uint64_t		end_think;
+	int				is_turn;	// [0] start - [1] queued
 	int				n_cycles;
 	int				*fork[2];	// maybe remove
 	pthread_mutex_t	*mutex[2];
@@ -52,6 +56,7 @@ typedef struct s_monastery
 	struct s_philo	**philo;
 	struct s_time	*time;
 	pthread_t		*th;
+	pthread_t		master;
 	int				*forks;		// maybe remove - but useful for visualize
 	pthread_mutex_t	*mutex;
 }				t_monastery;
@@ -62,12 +67,14 @@ int		parse_monastery(t_monastery *data, char **argv);
 // -------------------------------------------------------------------- THREADS
 int		create_threads(t_monastery *data);
 int		join_threads(t_monastery *data);
-void	*starters(void *arg);
-void	*queued(void *arg);
+void	*routine(void *arg);
+void	*supervision(void *arg);
 
 // ----------------------------------------------------------------------- TIME
-long int	get_ms(void);
-long int	get_us(void);
+uint64_t	get_time_ms(void);					// return time in milliseconds
+uint64_t	get_time_us(void);					// return time in microsecond
+// uint64_t	get_rel_time_ms(uint64_t start);	// return time in ms, relative to the beginning of program
+void		better_sleep(uint64_t n);
 
 // ---------------------------------------------------------------------- UTILS
 int		ft_atoi(const char *str);
