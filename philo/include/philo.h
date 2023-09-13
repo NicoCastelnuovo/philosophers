@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 08:55:40 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/09/13 16:22:39 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/09/13 17:01:42 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@
 
 typedef struct s_time
 {
-	int			health;
-	int			eat;
-	int			sleep;
+	uint64_t	health;
+	uint64_t	eat;
+	uint64_t	sleep;
 	uint64_t	start;
 	int			limit;
 }				t_time;

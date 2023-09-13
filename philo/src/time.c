@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 11:50:19 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/09/13 16:37:22 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/09/13 17:07:17 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	better_sleep(uint64_t n)
 	{
 		usleep(10); // instead of 400000 sleep 10 * (counter - now)
 		counter = get_time_ms();
-		printf("[ %llu ] ", counter);
+		// printf("[ %llu ] ", counter);
 	}
 	// printf("%llu\n", counter);
 }
