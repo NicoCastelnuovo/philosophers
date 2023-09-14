@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 08:55:40 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/09/14 13:47:57 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/09/14 15:26:58 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ typedef enum e_action
 	EAT,
 	SLEEP,
 	THINK,
-	DIE
+	DIE,
+	ENOUGH
 }			t_action;
 
 typedef struct s_time
@@ -44,7 +45,7 @@ typedef struct s_time
 	int			to_die;
 	int			to_eat;			// add to_ for readability ???
 	int			to_sleep;
-	int			limit;
+	int			eat_limit;
 	int64_t		clock_start;	// to be intended like the internal clock
 	int			is_end;
 }				t_time;
@@ -59,7 +60,7 @@ typedef struct s_philo
 	int				start_thinking;
 	int				end_thinking;
 	int				is_turn;	// [0] start - [1] queued // still necessary ???
-	int				n_cycles;
+	int				n_cycles;	// n of perosnal eat
 	int				*fork[2];	// maybe remove
 	pthread_mutex_t	*mutex[2];	// change to fork ????
 }				t_philo;
@@ -73,6 +74,8 @@ typedef struct s_monastery
 	pthread_t		master;
 	int				*forks;		// maybe remove - but useful for visualize
 	pthread_mutex_t	*mutex;
+	int				*eat_record; // modify to (*eat_record)[2], which records how many time the philos eat ---> { philo.id, eat_records }
+	int				eat_counter; // remove ??
 }				t_monastery;
 
 // -------------------------------------------------------------------- PARSING

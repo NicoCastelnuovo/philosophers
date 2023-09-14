@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 09:05:42 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/09/14 13:39:05 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/09/14 14:15:58 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,4 +112,6 @@ void	print_tmstmp(int who, t_action what, int64_t clock_start)
 		printf("%llu %d is thinking\n", when, who);
 	else if (what == DIE)
 		printf("%llu %d died\n", when, who);
+	else if (what == ENOUGH) // ------------------------------------ clean this from HERE and PHILO.H !!
+		printf("%llu %d finish to eat\n", when, who);
 }

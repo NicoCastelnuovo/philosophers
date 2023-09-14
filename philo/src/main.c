@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 08:57:48 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/09/14 13:35:11 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/09/14 14:37:56 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,5 +34,6 @@ int	main(int argc, char **argv)
 		return (err_code);
 	pthread_join(data.master, NULL);
 
+	print_all_philo(data.philo);
 	return (0);
 }
