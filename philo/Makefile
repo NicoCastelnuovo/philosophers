@@ -6,7 +6,7 @@
 #    By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/08 08:58:13 by ncasteln          #+#    #+#              #
-#    Updated: 2023/09/12 15:37:33 by ncasteln         ###   ########.fr        #
+#    Updated: 2023/09/14 09:00:47 by ncasteln         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ SRC = main.c \
 	threads.c \
 	routines.c \
 	time.c \
-	parsing.c \
+	create_philo.c \
+	create_monastery.c \
 	utils.c \
 	print_utils.c \
 	error.c

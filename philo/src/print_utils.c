@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 09:05:42 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/09/12 16:25:55 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/09/14 13:39:05 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,4 +95,21 @@ void	print_all_philo(t_philo **philo)
 		print_single_philo(philo[i]);
 		i++;
 	}
+}
+
+void	print_tmstmp(int who, t_action what, int64_t clock_start)
+{
+	int64_t	when;
+
+	when = now(clock_start);
+	if (what == FORK)
+		printf("%llu %d has taken a fork\n", when, who);
+	else if (what == EAT)
+		printf("%llu %d is eating\n", when, who);
+	else if (what == SLEEP)
+		printf("%llu %d is sleeping\n", when, who);
+	else if (what == THINK)
+		printf("%llu %d is thinking\n", when, who);
+	else if (what == DIE)
+		printf("%llu %d died\n", when, who);
 }

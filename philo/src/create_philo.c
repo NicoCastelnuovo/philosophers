@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
+/*   create_philo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/11 11:46:28 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/09/13 17:37:43 by ncasteln         ###   ########.fr       */
+/*   Created: 2023/09/14 08:58:47 by ncasteln          #+#    #+#             */
+/*   Updated: 2023/09/14 13:33:34 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,10 @@ static int	assign_to_group(int id, int n)
 		return (0);
 	if (id % 2 == 0)
 		return (0);
-	else
-		return (1);
+	return (1);
 }
 
-static void	*share_forks(t_philo *philo, int *forks, int n_philo)
+static void	share_forks(t_philo *philo, int *forks, int n_philo)
 {
 	int	i;
 
@@ -39,7 +38,7 @@ static void	*share_forks(t_philo *philo, int *forks, int n_philo)
 	philo->fork[1] = forks + i;
 }
 
-static void	*share_mutex(t_philo *philo, pthread_mutex_t *mutex, int n)
+static void	share_mutex(t_philo *philo, pthread_mutex_t *mutex, int n)
 {
 	int	i;
 
@@ -59,12 +58,14 @@ static void	parse_philo(int i, t_philo *philo, t_monastery *data)
 	share_mutex(philo, data->mutex, data->n_philo);
 	philo->is_turn = assign_to_group(philo->id, data->n_philo);
 	philo->n_cycles = 0;
-	philo->start_eat = 0; // /????
-	philo->start_think = 0; // /????
-	philo->end_think = 0; // /????
+	philo->last_eat = 0; // maybe to -1 ?
+	philo->start_thinking = 0;
+	philo->end_thinking = 0;
+	philo->start_sleeping = 0;
+	philo->end_sleeping = 0;
 }
 
-static t_philo	**create_philo(t_monastery *data)
+t_philo	**create_philo(t_monastery *data)
 {
 	t_philo	**philo;
 	int		i;
@@ -82,61 +83,4 @@ static t_philo	**create_philo(t_monastery *data)
 		i++;
 	}
 	return (philo);
-}
-
-int	parse_monastery(t_monastery *data, char **argv)
-{
-	int	i;
-
-	// PHILO NUMBER
-	data->n_philo = ft_atoi(argv[1]);
-
-	// MUTEXES
-	data->mutex = ft_calloc(data->n_philo, sizeof(pthread_mutex_t));
-	if (!data->mutex)
-		return (error(EMALLOC, __FILE__, __LINE__));
-	i = 0;
-	while (i < data->n_philo)
-	{
-		if (pthread_mutex_init(data->mutex + i, NULL))
-			return (error(EMUTEX, __FILE__, __LINE__));
-		i++;
-	}
-
-	// TIMESTAMP
-	data->time = ft_calloc(1, sizeof(t_time));
-	if (!data->time)
-		return (error(EMALLOC, __FILE__, __LINE__));
-	data->time->health = ft_atoi(argv[2]); //* 1000;
-	data->time->eat = ft_atoi(argv[3]); //* 1000;
-	data->time->sleep = ft_atoi(argv[4]); //* 1000;
-	if (argv[5])
-		data->time->limit = ft_atoi(argv[5]);
-	else
-		data->time->limit = 0; // remove if not important
-	data->time->start = 0;
-
-
-	// FORKS
-	data->forks = ft_calloc(data->n_philo, sizeof(int));
-	if (!data->forks)
-		return (error(EMALLOC, __FILE__, __LINE__));
-	i = 0;
-	while (i < data->n_philo)
-	{
-		data->forks[i] = 0; // ------------- giving an id to the forks just to recognize!
-		i++;
-	}
-
-	// PHILOSOPHERS
-	data->philo = create_philo(data);
-	if (!data->philo)
-		return (error(ECREATE_PHILO, __FILE__, __LINE__));
-
-	// THREADS
-	data->th = ft_calloc(data->n_philo + 1, sizeof(pthread_t));
-	if (!data->th)
-		return (error(EMALLOC, __FILE__, __LINE__));
-
-	return (0);
 }
