@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 08:55:40 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/09/14 15:26:58 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/04 15:56:12 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
 # include <sys/time.h>
 # include <errno.h>
 # include <stdio.h>
-# include <libc.h>		// memset used in ft_calloc
+# include <string.h>	// memset used in ft_calloc
+// # include <libc.h>	// memset used in ft_calloc
 
 // error definitions
 # define EARGC				1
@@ -26,8 +27,9 @@
 # define ECREATE_THREAD		3
 # define ETHJOIN			4
 # define EMUTEX				5
-# define ECREATE_PHILO		6
-# define EGET_TIME			7
+# define EDESTROY_MUTEX		6
+# define ECREATE_PHILO		7
+# define EGET_TIME			8
 
 // action definition
 typedef enum e_action
@@ -47,7 +49,8 @@ typedef struct s_time
 	int			to_sleep;
 	int			eat_limit;
 	int64_t		clock_start;	// to be intended like the internal clock
-	int			is_end;
+	int			someone_is_dead;
+	int			everyone_has_eaten;
 }				t_time;
 
 typedef struct s_philo
@@ -60,9 +63,8 @@ typedef struct s_philo
 	int				start_thinking;
 	int				end_thinking;
 	int				is_turn;	// [0] start - [1] queued // still necessary ???
-	int				n_cycles;	// n of perosnal eat
-	int				*fork[2];	// maybe remove
-	pthread_mutex_t	*mutex[2];	// change to fork ????
+	int				n_eat;		// n of times the philo eats
+	pthread_mutex_t	*fork[2];
 }				t_philo;
 
 typedef struct s_monastery
@@ -71,15 +73,18 @@ typedef struct s_monastery
 	struct s_philo	**philo;
 	struct s_time	*time;
 	pthread_t		*th;
-	pthread_t		master;
-	int				*forks;		// maybe remove - but useful for visualize
-	pthread_mutex_t	*mutex;
-	int				*eat_record; // modify to (*eat_record)[2], which records how many time the philos eat ---> { philo.id, eat_records }
-	int				eat_counter; // remove ??
+
+	pthread_t		dead_monitor;
+
+	pthread_t		eat_monitor;
+	int				*n_eat_status;		// n of times each philo has eaten
+
+	pthread_mutex_t	*mutex;		// n of mutex == n_philo
+
+	int				err_code;
 }				t_monastery;
 
 // -------------------------------------------------------------------- PARSING
-
 int		create_monastery(t_monastery *data, char **argv);
 t_philo	**create_philo(t_monastery *data);
 
@@ -87,14 +92,15 @@ t_philo	**create_philo(t_monastery *data);
 
 int		create_threads(t_monastery *data);
 int		join_threads(t_monastery *data);
-void	*routine(void *arg);
-void	*supervision(void *arg);
+void	*philo_routine(void *arg);
+void	*dead_routine(void *arg);
+void	*eat_routine(void *arg);
 
 // ----------------------------------------------------------------------- TIME
 
-int64_t		get_time_ms(void);
-int64_t		now(int64_t clock_start);
-void		better_sleep(int64_t n);
+int64_t	get_time_ms(void);
+int64_t	now(int64_t clock_start);
+void	accurate_sleep(int64_t n);
 
 // ---------------------------------------------------------------------- UTILS
 int		ft_atoi(const char *str);

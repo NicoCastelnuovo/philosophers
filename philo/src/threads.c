@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 15:40:28 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/09/14 14:19:48 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/04 11:38:21 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,17 @@ int create_threads(t_monastery *data)
 	data->time->clock_start = get_time_ms(); // move it right-before the starting threads ???
 	if (!data->time->clock_start)
 		return (error(EGET_TIME, __FILE__, __LINE__));
-	if (pthread_create(&data->master, NULL, supervision, data))
+	if (data->time->eat_limit >= 0) // right??? -- what happens in case of -1 input??
+	{
+		if (pthread_create(&data->eat_monitor, NULL, eat_routine, data) != 0)
+			return (error(ECREATE_THREAD, __FILE__, __LINE__));
+	}
+	if (pthread_create(&data->dead_monitor, NULL, dead_routine, data) != 0)
 		return (error(ECREATE_THREAD, __FILE__, __LINE__));
 	// make him wait for a while ???
 	while (i < data->n_philo)
 	{
-		if (pthread_create(data->th + i, NULL, routine, data->philo[i]))
+		if (pthread_create(data->th + i, NULL, philo_routine, data->philo[i]) != 0)
 			return (error(ECREATE_THREAD, __FILE__, __LINE__));
 		i++;
 	}
@@ -41,9 +46,12 @@ int	join_threads(t_monastery *data)
 	i = 0;
 	while (i < data->n_philo)
 	{
-		if (pthread_join(data->th[i], NULL))
+		if (pthread_join(data->th[i], NULL) != 0)
 			return (error(ETHJOIN, __FILE__, __LINE__));
 		i++;
 	}
+	pthread_join(data->dead_monitor, NULL);
+	if (data->time->eat_limit > -1)
+		pthread_join(data->eat_monitor, NULL); // only if present
 	return (0);
 }

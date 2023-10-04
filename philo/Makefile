@@ -6,7 +6,7 @@
 #    By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/08 08:58:13 by ncasteln          #+#    #+#              #
-#    Updated: 2023/09/14 09:00:47 by ncasteln         ###   ########.fr        #
+#    Updated: 2023/10/04 09:28:19 by ncasteln         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,8 @@ CFLAGS = -g -pthread -Wall -Wextra #-Werror #or -lpthread
 # ------------------------------------------------------------------------- SRC
 SRC = main.c \
 	threads.c \
-	routines.c \
+	philo_routine.c \
+	monitor_routine.c \
 	time.c \
 	create_philo.c \
 	create_monastery.c \

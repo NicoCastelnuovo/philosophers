@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:58:47 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/09/14 14:25:41 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/04 13:19:56 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,38 +26,33 @@ static int	assign_to_group(int id, int n)
 	return (1);
 }
 
-static void	share_forks(t_philo *philo, int *forks, int n_philo)
+/*
+	Assign to each philo the correct forks. philo->fork[0] is the left one and
+	philo->fork[1] is the right. Only the first philo has a different logic to
+	have assigned the left fork.
+	         0   1   2   3    4
+	-> [¥] o ¥ o ¥ o ¥ o ¥ o [¥] -> the fork in brackets is the left one for
+	the first philo and the right for the last philo.
+*/
+static void	share_forks(t_philo *philo, pthread_mutex_t *mutex, int n)
 {
 	int	i;
 
-	i = philo->id - 1;
+	i = philo->id; // -1;
 	if (i == 0) // first philo
-		philo->fork[0] = forks + (n_philo - 1);
+		philo->fork[0] = mutex + (n - 1);
 	else
-		philo->fork[0] = forks + (i - 1);
-	philo->fork[1] = forks + i;
-}
-
-static void	share_mutex(t_philo *philo, pthread_mutex_t *mutex, int n)
-{
-	int	i;
-
-	i = philo->id - 1;
-	if (i == 0) // first philo
-		philo->mutex[0] = mutex + (n - 1);
-	else
-		philo->mutex[0] = mutex + (i - 1);
-	philo->mutex[1] = mutex + i; // right mutex
+		philo->fork[0] = mutex + (i - 2);
+	philo->fork[1] = mutex + (i - 1); // right mutex
 }
 
 static void	parse_philo(int i, t_philo *philo, t_monastery *data)
 {
-	philo->id = i + 1;
+	philo->id = i; // !!! ATTENTION !!!
 	philo->time = data->time;// just want info, not modify the values -- err prone ?
-	share_forks(philo, data->forks, data->n_philo);
-	share_mutex(philo, data->mutex, data->n_philo);
-	philo->is_turn = assign_to_group(philo->id, data->n_philo);
-	philo->n_cycles = 0;
+	share_forks(philo, data->mutex, data->n_philo);
+	philo->is_turn = assign_to_group(philo->id + 1, data->n_philo);
+	philo->n_eat = 0;
 	philo->last_eat = 0; // maybe to -1 ?
 	philo->start_thinking = 0;
 	philo->end_thinking = 0;
