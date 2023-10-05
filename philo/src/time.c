@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 11:50:19 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/04 11:06:53 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/04 17:04:31 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,11 @@ void	accurate_sleep(int64_t n)
 {
 	int64_t	now = get_time_ms();
 	int64_t	counter = get_time_ms();
-	// print64_tf("%llu\n", counter);
 	while (counter - now < n) // 400
 	{
 		usleep(10); // instead of 400000 sleep 10 * (counter - now)
 		counter = get_time_ms();
-		// print64_tf("[ %llu ] ", counter);
 	}
-	// print64_tf("%llu\n", counter);
 }
 
 /*

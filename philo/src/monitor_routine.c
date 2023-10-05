@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 09:27:25 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/04 11:32:36 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/05 09:05:57 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,28 +22,11 @@ static int	is_philo_dead(t_philo *philo)
 	t_time	*time;
 
 	time = philo->time;
-
-	// !!!!!   SHOULD ADD ALSO THINK + SLEEP TIME ????   !!!!!! ----> seems not
-
-	// if (philo->end_thinking) // is this flag necessary ???????? ----> seems not
-	// {
-
-	if (now(time->clock_start) - philo->start_thinking >= time->to_die)
-	{
-		// printf("philo[%d] died while thinking [ %llums ]\n", philo->id, now(time->clock_start) - philo->start_sleeping);
-		return (1);
-	}
-	if (now(time->clock_start) - philo->start_sleeping >= time->to_die) // still necessary to point out when die while sleeping ??? ----> [[ YES ]] --> 4 310 200 100
-	{
-		// printf("philo[%d] died while sleeping [ %llums ]\n", philo->id, now(time->clock_start) - philo->start_sleeping);
-		return (1);
-	}
 	if (now(time->clock_start) - philo->last_eat >= time->to_die)
 	{
 		// printf("philo[%d] don't eat for [ %llums ]\n", philo->id, now(time->clock_start) - philo->last_eat);
 		return (1);
 	}
-	// }
 	return (0);
 }
 
@@ -74,7 +57,7 @@ void	*dead_routine(void *arg)
 
 /*
 	eat_monitor modifies data->n_eat_status, synchronizing it with each philo's n_eat.
-	In case someone raches the data->time->eat_limit, the value is set to -1 as an
+	In case someone raches the data->time->eat_limit, the value iss set to -1 as an
 	end flag.
 */
 void	*eat_routine(void *arg)

@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 08:55:40 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/04 15:56:12 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/05 09:49:34 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # include <unistd.h>
 # include <stdlib.h>	// printf()
 # include <sys/time.h>
-# include <errno.h>
 # include <stdio.h>
 # include <string.h>	// memset used in ft_calloc
 // # include <libc.h>	// memset used in ft_calloc
@@ -26,8 +25,8 @@
 # define EMALLOC			2
 # define ECREATE_THREAD		3
 # define ETHJOIN			4
-# define EMUTEX				5
-# define EDESTROY_MUTEX		6
+# define EMUTEX_INIT		5
+# define EMUTEX_DESTROY		6
 # define ECREATE_PHILO		7
 # define EGET_TIME			8
 
@@ -42,29 +41,35 @@ typedef enum e_action
 	ENOUGH
 }			t_action;
 
+typedef struct s_shared_info
+{
+	int64_t		clock_start;
+	int			someone_is_dead;
+	int			everyone_has_eaten;
+}				t_shared_info;
+
 typedef struct s_time
 {
 	int			to_die;
-	int			to_eat;			// add to_ for readability ???
+	int			to_eat;
 	int			to_sleep;
 	int			eat_limit;
-	int64_t		clock_start;	// to be intended like the internal clock
+	int64_t		clock_start;		// to be intended like the internal clock
 	int			someone_is_dead;
 	int			everyone_has_eaten;
 }				t_time;
 
 typedef struct s_philo
 {
-	int				id;			// set to -1 if die
-	struct s_time	*time;
+	int				id;
+	struct s_time	*time;			// ???? dont need so much
 	int				last_eat;
 	int				start_sleeping;
-	int				end_sleeping; /// remove ?????
 	int				start_thinking;
-	int				end_thinking;
-	int				is_turn;	// [0] start - [1] queued // still necessary ???
-	int				n_eat;		// n of times the philo eats
-	pthread_mutex_t	*fork[2];
+	int				end_thinking;	// --------------------------------------------- necessary ?????
+	int				is_turn;		// [0] start - [1] queued
+	int				n_eat;			// n of times the philo eats
+	pthread_mutex_t	*fork[2];		// access to mutual exclusion of the forks
 }				t_philo;
 
 typedef struct s_monastery
@@ -72,15 +77,11 @@ typedef struct s_monastery
 	int				n_philo;
 	struct s_philo	**philo;
 	struct s_time	*time;
-	pthread_t		*th;
-
-	pthread_t		dead_monitor;
-
-	pthread_t		eat_monitor;
-	int				*n_eat_status;		// n of times each philo has eaten
-
-	pthread_mutex_t	*mutex;		// n of mutex == n_philo
-
+	pthread_t		*th_philo;
+	pthread_t		th_dead_monitor;
+	pthread_t		th_eat_monitor;
+	int				*n_eat_status;	// n of times each philo has eaten
+	pthread_mutex_t	*forks;			// n of mutex == n_philo
 	int				err_code;
 }				t_monastery;
 
@@ -89,7 +90,6 @@ int		create_monastery(t_monastery *data, char **argv);
 t_philo	**create_philo(t_monastery *data);
 
 // -------------------------------------------------------------------- THREADS
-
 int		create_threads(t_monastery *data);
 int		join_threads(t_monastery *data);
 void	*philo_routine(void *arg);
@@ -97,7 +97,6 @@ void	*dead_routine(void *arg);
 void	*eat_routine(void *arg);
 
 // ----------------------------------------------------------------------- TIME
-
 int64_t	get_time_ms(void);
 int64_t	now(int64_t clock_start);
 void	accurate_sleep(int64_t n);
@@ -107,8 +106,7 @@ int		ft_atoi(const char *str);
 void	*ft_calloc(size_t len, size_t n_bits);
 
 // ---------------------------------------------------------------- PRINT UTILS
-
-int		error(int err_code, char *file, int line);
+int		error(int *err_store, int err_code, char *file, int line);
 void	ft_putchar_fd(char c, int fd);
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putendl_fd(char *s, int fd);
