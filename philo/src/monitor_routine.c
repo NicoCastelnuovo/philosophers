@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 09:27:25 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/05 09:05:57 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/06 11:19:29 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,26 @@
 	the moment in which the philo went to sleep or began to eat. If those
 	interval are equal to time_to_die, means that philo died.
 */
-static int	is_philo_dead(t_philo *philo)
+static int	is_philo_dead(t_monastery *data, int i)
 {
-	t_time	*time;
+	t_philo	*curr_philo;
 
-	time = philo->time;
-	if (now(time->clock_start) - philo->last_eat >= time->to_die)
+	curr_philo = data->philo[i];
+	pthread_mutex_lock(data->eat_locks + i);
+	if (now_us(data->time->clock_start) - curr_philo->eat_time >= data->time->to_die)
 	{
-		// printf("philo[%d] don't eat for [ %llums ]\n", philo->id, now(time->clock_start) - philo->last_eat);
+		printf("%llu %d died\n", now_us(data->time->clock_start) / 1000, curr_philo->id + 1);
+		pthread_mutex_lock(&data->dead_lock);
+		data->time->dead_flag = 1;
+		pthread_mutex_unlock(&data->dead_lock);
+		pthread_mutex_unlock(data->eat_locks + i);
 		return (1);
 	}
+	pthread_mutex_unlock(data->eat_locks + i);
 	return (0);
 }
 
-void	*dead_routine(void *arg)
+void	*monitor_routine(void *arg)
 {
 	t_monastery	*data;
 	t_philo		**philo;
@@ -41,18 +47,15 @@ void	*dead_routine(void *arg)
 	clock_start = data->time->clock_start;
 	philo = data->philo;
 	i = 0;
-	while (philo[i])
+	while (1)
 	{
-		if (is_philo_dead(philo[i]))
-		{
-			data->time->someone_is_dead = 1;
-			print_tmstmp(philo[i]->id, DIE, clock_start);
+		if (is_philo_dead(data, i))
 			break ;
-		}
 		i++;
 		if (i == data->n_philo)
 			i = 0;
 	}
+	return (NULL);
 }
 
 /*
@@ -90,4 +93,5 @@ void	*eat_routine(void *arg)
 	// 	if (i == data->n_philo)
 	// 		i = 0;
 	// }
+	return (NULL);
 }

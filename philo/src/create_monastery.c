@@ -6,11 +6,51 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 11:46:28 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/05 09:46:30 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/06 09:09:59 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+static int	create_forks(t_monastery *data)
+{
+	int	i;
+
+	data->forks = ft_calloc(data->n_philo, sizeof(pthread_mutex_t));
+	if (!data->forks)
+		return (error(&data->err_code, EMALLOC, __FILE__, __LINE__));
+	i = 0;
+	while (i < data->n_philo)
+	{
+		if (pthread_mutex_init(data->forks + i, NULL) != 0)
+			return (error(&data->err_code, EMUTEX_INIT, __FILE__, __LINE__));
+		i++;
+	}
+	return (0);
+}
+
+static int	create_locks(t_monastery *data)
+{
+	int	i;
+
+	if (create_forks(data))
+		return (error(&data->err_code, EMUTEX_INIT, __FILE__, __LINE__));
+	if (pthread_mutex_init(&data->dead_lock, NULL))
+		return (error(&data->err_code, EMUTEX_INIT, __FILE__, __LINE__));
+	i = 0;
+	data->eat_locks = ft_calloc(data->n_philo, sizeof(pthread_mutex_t));
+	if (!data->eat_locks)
+		return (error(&data->err_code, EMALLOC, __FILE__, __LINE__));
+	while (i < data->n_philo)
+	{
+		if (pthread_mutex_init(data->eat_locks + i, NULL))
+			return (error(&data->err_code, EMUTEX_INIT, __FILE__, __LINE__));
+		i++;
+	}
+	if (pthread_mutex_init(&data->print_lock, NULL))
+		return (error(&data->err_code, EMUTEX_INIT, __FILE__, __LINE__));
+	return (0);
+}
 
 /*
 	Check if there is a n times each philo has to eat. If yes, data->n_eat_status
@@ -45,46 +85,28 @@ static int	parse_time(t_monastery *data, char **argv)
 	data->time = ft_calloc(1, sizeof(t_time));
 	if (!data->time)
 		return (error(&data->err_code, EMALLOC, __FILE__, __LINE__));
-	data->time->to_die = ft_atoi(argv[2]); //* 1000;
-	data->time->to_eat = ft_atoi(argv[3]); //* 1000;
-	data->time->to_sleep = ft_atoi(argv[4]); //* 1000;
+	data->time->to_die = ft_atoi(argv[2]) * 1000; // us
+	data->time->to_eat = ft_atoi(argv[3]) * 1000;
+	data->time->to_sleep = ft_atoi(argv[4]) * 1000;
 	data->time->clock_start = 0;
-	return (0);
-}
-
-static int	create_forks(t_monastery *data)
-{
-	int	i;
-
-	data->forks = ft_calloc(data->n_philo, sizeof(pthread_mutex_t));
-	if (!data->forks)
-		return (error(&data->err_code, EMALLOC, __FILE__, __LINE__));
-	i = 0;
-	while (i < data->n_philo)
-	{
-		if (pthread_mutex_init(data->forks + i, NULL) != 0)
-			return (error(&data->err_code, EMUTEX_INIT, __FILE__, __LINE__));
-		i++;
-	}
 	return (0);
 }
 
 int	create_monastery(t_monastery *data, char **argv)
 {
 	data->n_philo = ft_atoi(argv[1]);
-	if (create_forks(data))
+	if (create_locks(data))
 		return (data->err_code);
+
 	if (parse_time(data, argv))
 		return (data->err_code);
 	data->philo = create_philo(data);
 	if (!data->philo)
 		return (error(&data->err_code, ECREATE_PHILO, __FILE__, __LINE__));
+
 	if (parse_eat_limit(data, argv))
 		return (data->err_code);
-	data->th_philo = ft_calloc(data->n_philo, sizeof(pthread_t)); // why + 1 ?????????
-	if (!data->th_philo)
-		return (error(&data->err_code, EMALLOC, __FILE__, __LINE__));
-	data->time->someone_is_dead = 0;
-	data->time->everyone_has_eaten = 0;
+
+	data->time->dead_flag = 0;
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 09:05:42 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/04 12:44:51 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/06 09:47:36 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,10 @@ void	print_single_philo(t_philo *philo)
 
 	if (!philo)
 		return ;
-	if (philo->is_turn == 1)
-		printf("[%d]__PHILO__[group %d]__\n", philo->id + 1, philo->is_turn);
+	if (philo->can_start_eating == 1)
+		printf("[%d]__PHILO__[start? -> %d]__\n", philo->id + 1, philo->can_start_eating);
 	else
-		printf("[%d]__PHILO__[group %d]__\n", philo->id + 1, philo->is_turn);
+		printf("[%d]__PHILO__[start? -> %d]__\n", philo->id + 1, philo->can_start_eating);
 	printf("n_eat: [%d]\n\n", philo->n_eat);
 }
 
@@ -96,22 +96,22 @@ void	print_all_philo(t_philo **philo)
 	}
 }
 
-void	print_tmstmp(int who, t_action what, int64_t clock_start)
+void	print_tmstmp(t_philo *philo, t_action what, int64_t when)
 {
-	int64_t	when;
+	int		who;
 
-	who += 1;
-	when = now(clock_start);
-	if (what == FORK)
-		printf("%llu %d has taken a fork\n", when, who);
-	else if (what == EAT)
-		printf("%llu %d is eating\n", when, who);
-	else if (what == SLEEP)
-		printf("%llu %d is sleeping\n", when, who);
-	else if (what == THINK)
-		printf("%llu %d is thinking\n", when, who);
-	else if (what == DIE)
-		printf("%llu %d died\n", when, who);
-	else if (what == ENOUGH) // ------------------------------------ clean this from HERE and PHILO.H !!
-		printf("%llu %d finish to eat\n", when, who);
+	who = philo->id + 1;
+	pthread_mutex_lock(philo->print_lock);
+	if (!philo->time->dead_flag)
+	{
+		if (what == FORK)
+			printf("%llu %d has taken a fork\n", when / 1000, who);
+		else if (what == EAT)
+			printf("%llu %d is eating\n", when / 1000, who);
+		else if (what == SLEEP)
+			printf("%llu %d is sleeping\n", when / 1000, who);
+		else if (what == THINK)
+			printf("%llu %d is thinking\n", when / 1000, who);
+	}
+	pthread_mutex_unlock(philo->print_lock);
 }

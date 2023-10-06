@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 08:55:40 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/05 09:49:34 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/06 10:39:42 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,8 @@ typedef enum e_action
 	FORK,
 	EAT,
 	SLEEP,
-	THINK,
-	DIE,
-	ENOUGH
+	THINK
 }			t_action;
-
-typedef struct s_shared_info
-{
-	int64_t		clock_start;
-	int			someone_is_dead;
-	int			everyone_has_eaten;
-}				t_shared_info;
 
 typedef struct s_time
 {
@@ -54,34 +45,46 @@ typedef struct s_time
 	int			to_eat;
 	int			to_sleep;
 	int			eat_limit;
-	int64_t		clock_start;		// to be intended like the internal clock
-	int			someone_is_dead;
-	int			everyone_has_eaten;
+	int64_t		clock_start;			// to be intended like the internal clock
+	int			dead_flag;
 }				t_time;
 
 typedef struct s_philo
 {
 	int				id;
-	struct s_time	*time;			// ???? dont need so much
-	int				last_eat;
-	int				start_sleeping;
-	int				start_thinking;
-	int				end_thinking;	// --------------------------------------------- necessary ?????
-	int				is_turn;		// [0] start - [1] queued
-	int				n_eat;			// n of times the philo eats
-	pthread_mutex_t	*fork[2];		// access to mutual exclusion of the forks
+	pthread_t		th;
+	struct s_time	*time;
+	int				eat_time;
+	int				can_start_eating;	// [0] start - [1] queued
+	int				n_eat;				// n of times the philo eats
+	pthread_mutex_t	*l_fork;			// mut excl of the forks
+	pthread_mutex_t	*r_fork;			// mut excl of the forks
+	pthread_mutex_t	*print_lock;		// mut excl when print messages
+	pthread_mutex_t	*eat_lock;			// mut excl when update/read last_time_eat (persnoal)
+	pthread_mutex_t	*dead_lock;			// mut excl to update/read if someone is dead
 }				t_philo;
 
 typedef struct s_monastery
 {
+	// philos
 	int				n_philo;
 	struct s_philo	**philo;
 	struct s_time	*time;
-	pthread_t		*th_philo;
+
+	// dead monitor
 	pthread_t		th_dead_monitor;
+
+	// eat monitor
 	pthread_t		th_eat_monitor;
 	int				*n_eat_status;	// n of times each philo has eaten
+
+	// mutexes
 	pthread_mutex_t	*forks;			// n of mutex == n_philo
+	pthread_mutex_t	print_lock;		// mut excl when print messages (shared between all)
+	pthread_mutex_t	*eat_locks;		// mut excl when update/read last_time_eat (shared between monitor and philo)
+	pthread_mutex_t	dead_lock;		// mut excl to update/read if someone is dead
+
+	// errors
 	int				err_code;
 }				t_monastery;
 
@@ -93,13 +96,16 @@ t_philo	**create_philo(t_monastery *data);
 int		create_threads(t_monastery *data);
 int		join_threads(t_monastery *data);
 void	*philo_routine(void *arg);
-void	*dead_routine(void *arg);
+void	*monitor_routine(void *arg);
 void	*eat_routine(void *arg);
 
 // ----------------------------------------------------------------------- TIME
 int64_t	get_time_ms(void);
-int64_t	now(int64_t clock_start);
-void	accurate_sleep(int64_t n);
+int64_t	get_time_us(void);
+int64_t	now_ms(int64_t clock_start);
+int64_t	now_us(int64_t clock_start);
+void	accurate_sleep_ms(int64_t n);
+void	accurate_sleep_us(int64_t n);
 
 // ---------------------------------------------------------------------- UTILS
 int		ft_atoi(const char *str);
@@ -113,6 +119,6 @@ void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 void	print_single_philo(t_philo *philo);
 void	print_all_philo(t_philo **philo);
-void	print_tmstmp(int who, t_action what, int64_t clock_start);
+void	print_tmstmp(t_philo *philo, t_action what, int64_t when);
 
 #endif
