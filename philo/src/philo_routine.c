@@ -6,16 +6,11 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 15:36:27 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/06 11:06:40 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/06 12:10:49 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-static int	is_end(t_philo *philo)
-{
-
-}
 
 static void	philo_think(t_philo *philo)
 {
@@ -53,7 +48,7 @@ void	*philo_routine(void *arg)
 
 	philo = (t_philo *)arg;
 	clock_start = philo->time->clock_start;
-	if (!philo->can_start_eating)	// move outside the while(1) // maybe rename to first_turn
+	if (!philo->starting_group)	// move outside the while(1) // maybe rename to first_turn
 	{
 		philo_sleep(philo);
 		philo_think(philo);

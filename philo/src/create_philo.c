@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:58:47 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/06 10:29:59 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/06 11:37:14 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static void	parse_philo(int i, t_philo *philo, t_monastery *data)
 	philo->id = i;
 	philo->time = data->time;
 	share_locks(philo, data);
-	philo->can_start_eating = is_starting_group(philo->id);
+	philo->starting_group = is_starting_group(philo->id);
 	philo->n_eat = 0;
 	philo->eat_time = 0;
 }

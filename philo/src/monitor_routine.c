@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 09:27:25 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/06 11:19:29 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/06 12:16:42 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,14 @@ static int	is_philo_dead(t_monastery *data, int i)
 	pthread_mutex_lock(data->eat_locks + i);
 	if (now_us(data->time->clock_start) - curr_philo->eat_time >= data->time->to_die)
 	{
+		pthread_mutex_lock(&data->print_lock);
 		printf("%llu %d died\n", now_us(data->time->clock_start) / 1000, curr_philo->id + 1);
+		pthread_mutex_unlock(&data->print_lock);
+
 		pthread_mutex_lock(&data->dead_lock);
 		data->time->dead_flag = 1;
 		pthread_mutex_unlock(&data->dead_lock);
+
 		pthread_mutex_unlock(data->eat_locks + i);
 		return (1);
 	}
