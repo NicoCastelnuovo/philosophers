@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 11:46:28 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/06 09:09:59 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/09 08:24:19 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,9 @@ static int	parse_time(t_monastery *data, char **argv)
 	data->time = ft_calloc(1, sizeof(t_time));
 	if (!data->time)
 		return (error(&data->err_code, EMALLOC, __FILE__, __LINE__));
-	data->time->to_die = ft_atoi(argv[2]) * 1000; // us
-	data->time->to_eat = ft_atoi(argv[3]) * 1000;
-	data->time->to_sleep = ft_atoi(argv[4]) * 1000;
+	data->time->to_die = ft_atoi(argv[2]);
+	data->time->to_eat = ft_atoi(argv[3]);
+	data->time->to_sleep = ft_atoi(argv[4]);
 	data->time->clock_start = 0;
 	return (0);
 }

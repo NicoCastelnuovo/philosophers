@@ -6,24 +6,11 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:58:47 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/06 10:29:59 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/09 08:42:29 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-/*
-	Philo whose (id + 1) is even, will start to eat and pick the left fork.
-	The odd philo, start sleeping, and pick always the right one.
-	Divide the total philosophers into 2 groups. The group whose (id + 1) is
-	even will start.
-*/
-static int	is_starting_group(int id)
-{
-	if (id % 2 != 0) // ODD will start
-		return (1);
-	return (0); // EVEN
-}
 
 /*
 	Assign to each philo the correct forks. Only the first philo has a
@@ -56,7 +43,6 @@ static void	parse_philo(int i, t_philo *philo, t_monastery *data)
 	philo->id = i;
 	philo->time = data->time;
 	share_locks(philo, data);
-	philo->can_start_eating = is_starting_group(philo->id);
 	philo->n_eat = 0;
 	philo->eat_time = 0;
 }

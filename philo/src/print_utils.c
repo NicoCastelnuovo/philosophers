@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 09:05:42 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/06 09:47:36 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/09 08:43:36 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,7 @@ void	print_single_philo(t_philo *philo)
 
 	if (!philo)
 		return ;
-	if (philo->can_start_eating == 1)
-		printf("[%d]__PHILO__[start? -> %d]__\n", philo->id + 1, philo->can_start_eating);
-	else
-		printf("[%d]__PHILO__[start? -> %d]__\n", philo->id + 1, philo->can_start_eating);
+	printf("__PHILO [%d]__", philo->id + 1);
 	printf("n_eat: [%d]\n\n", philo->n_eat);
 }
 
@@ -105,13 +102,13 @@ void	print_tmstmp(t_philo *philo, t_action what, int64_t when)
 	if (!philo->time->dead_flag)
 	{
 		if (what == FORK)
-			printf("%llu %d has taken a fork\n", when / 1000, who);
+			printf("%llu %d has taken a fork\n", when, who);
 		else if (what == EAT)
-			printf("%llu %d is eating\n", when / 1000, who);
+			printf("%llu %d is eating\n", when, who);
 		else if (what == SLEEP)
-			printf("%llu %d is sleeping\n", when / 1000, who);
+			printf("%llu %d is sleeping\n", when, who);
 		else if (what == THINK)
-			printf("%llu %d is thinking\n", when / 1000, who);
+			printf("%llu %d is thinking\n", when, who);
 	}
 	pthread_mutex_unlock(philo->print_lock);
 }

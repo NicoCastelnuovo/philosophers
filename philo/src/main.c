@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 08:57:48 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/06 10:28:38 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/09 08:35:25 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	main(int argc, char **argv)
 	t_monastery	data;
 
 	data.err_code = 0;
+	// parsing !!
 	if (argc < 5 || argc > 6)
 		return (error(&data.err_code, EARGC, __FILE__, __LINE__));
 	if (create_monastery(&data, argv))

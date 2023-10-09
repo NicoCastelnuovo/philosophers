@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 08:55:40 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/06 10:39:42 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/09 08:42:34 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ typedef struct s_philo
 	pthread_t		th;
 	struct s_time	*time;
 	int				eat_time;
-	int				can_start_eating;	// [0] start - [1] queued
 	int				n_eat;				// n of times the philo eats
 	pthread_mutex_t	*l_fork;			// mut excl of the forks
 	pthread_mutex_t	*r_fork;			// mut excl of the forks
@@ -100,12 +99,9 @@ void	*monitor_routine(void *arg);
 void	*eat_routine(void *arg);
 
 // ----------------------------------------------------------------------- TIME
-int64_t	get_time_ms(void);
-int64_t	get_time_us(void);
-int64_t	now_ms(int64_t clock_start);
-int64_t	now_us(int64_t clock_start);
+int64_t	get_abs_time(void);
+int64_t	get_rel_time(int64_t clock_start);
 void	accurate_sleep_ms(int64_t n);
-void	accurate_sleep_us(int64_t n);
 
 // ---------------------------------------------------------------------- UTILS
 int		ft_atoi(const char *str);
