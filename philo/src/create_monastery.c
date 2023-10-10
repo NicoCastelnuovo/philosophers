@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 11:46:28 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/09 08:24:19 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/10 11:08:42 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,10 @@ static int	parse_eat_limit(t_monastery *data, char **argv)
 	int	i;
 
 	if (argv[5])
-		data->time->eat_limit = ft_atoi(argv[5]); // remove and set to (null) ???
+		data->time.eat_limit = ft_atoi(argv[5]); // remove and set to (null) ???
 	else
-		data->time->eat_limit = -1; // remove if not important - if not present will be 0
-	if (data->time->eat_limit > -1)
+		data->time.eat_limit = -1; // remove if not important - if not present will be 0
+	if (data->time.eat_limit > -1)
 	{
 		data->n_eat_status = ft_calloc(data->n_philo, sizeof(int));
 		if (!data->n_eat_status)
@@ -73,7 +73,7 @@ static int	parse_eat_limit(t_monastery *data, char **argv)
 		i = 0;
 		while (i < data->n_philo)
 		{
-			data->n_eat_status[i] = data->philo[i]->n_eat;
+			data->n_eat_status[i] = (data->philo + i)->n_eat;
 			i++;
 		}
 	}
@@ -82,13 +82,11 @@ static int	parse_eat_limit(t_monastery *data, char **argv)
 
 static int	parse_time(t_monastery *data, char **argv)
 {
-	data->time = ft_calloc(1, sizeof(t_time));
-	if (!data->time)
-		return (error(&data->err_code, EMALLOC, __FILE__, __LINE__));
-	data->time->to_die = ft_atoi(argv[2]);
-	data->time->to_eat = ft_atoi(argv[3]);
-	data->time->to_sleep = ft_atoi(argv[4]);
-	data->time->clock_start = 0;
+	data->time.to_die = ft_atoi(argv[2]);
+	data->time.to_eat = ft_atoi(argv[3]);
+	data->time.to_sleep = ft_atoi(argv[4]);
+	data->time.clock_start = 0;
+	// eat_imit left
 	return (0);
 }
 
@@ -100,6 +98,9 @@ int	create_monastery(t_monastery *data, char **argv)
 
 	if (parse_time(data, argv))
 		return (data->err_code);
+
+	data->dead_flag = 0;
+
 	data->philo = create_philo(data);
 	if (!data->philo)
 		return (error(&data->err_code, ECREATE_PHILO, __FILE__, __LINE__));
@@ -107,6 +108,5 @@ int	create_monastery(t_monastery *data, char **argv)
 	if (parse_eat_limit(data, argv))
 		return (data->err_code);
 
-	data->time->dead_flag = 0;
 	return (0);
 }

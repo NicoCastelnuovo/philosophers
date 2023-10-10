@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 11:50:19 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/09 08:34:56 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/10 09:55:42 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,25 +30,25 @@ int64_t	get_abs_time(void)
 	return (s_to_ms + u_to_ms);
 }
 
-void	accurate_sleep_ms(int64_t time_to_sleep)
-{
-	int64_t	now;
-
-	now = get_abs_time();
-	while (get_abs_time() < now + time_to_sleep) // 400
-		usleep(450); // instead of 400000 sleep 50 * (counter - now)
-}
-
-// void	accurate_sleep_ms(int64_t n)
+// void	accurate_sleep_ms(int64_t time_to_sleep)
 // {
-// 	int64_t	now = get_time_ms();
-// 	int64_t	counter = get_time_ms();
-// 	while (counter - now < n) // 400
-// 	{
-// 		usleep(10); // instead of 400000 sleep 10 * (counter - now)
-// 		counter = get_time_ms();
-// 	}
+// 	int64_t	now;
+
+// 	now = get_abs_time();
+// 	while (get_abs_time() < now + time_to_sleep) // 400
+// 		usleep(50); // instead of 400000 sleep 50 * (counter - now)
 // }
+
+void	accurate_sleep_ms(int64_t n)
+{
+	int64_t	now = get_abs_time();
+	int64_t	counter = get_abs_time();
+	while (counter - now < n) // 400
+	{
+		usleep(10); // instead of 400000 sleep 10 * (counter - now)
+		counter = get_abs_time();
+	}
+}
 
 /*
 	Returns the current time, in relation to the beginning of the
@@ -58,3 +58,19 @@ int64_t	get_rel_time(int64_t clock_start)
 {
 	return (get_abs_time() - clock_start);
 }
+
+
+
+// long	handle_thinking_time(t_philo *philo)
+// {
+// 	long	time_to_think;
+
+// 	pthread_mutex_lock(&philo->general_meal_lock);
+// 	time_to_think = (philo->table->time_to_die - (datetime_now()
+// 				- philo->last_meal) - philo->table->time_to_eat) / 2;
+// 	pthread_mutex_unlock(&philo->general_meal_lock);
+// 	if (time_to_think > 500)
+// 		return (200);
+// 	else
+// 		return (1);
+// }

@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 08:55:40 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/09 08:42:34 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/10 11:10:41 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define PHILO_H
 # include <pthread.h>
 # include <unistd.h>
-# include <stdlib.h>	// printf()
+# include <stdlib.h>	// printf
 # include <sys/time.h>
 # include <stdio.h>
 # include <string.h>	// memset used in ft_calloc
@@ -46,16 +46,34 @@ typedef struct s_time
 	int			to_sleep;
 	int			eat_limit;
 	int64_t		clock_start;			// to be intended like the internal clock
-	int			dead_flag;
+	// dead flag
 }				t_time;
+
+typedef struct s_shared
+{
+	int				n_eat;
+	int				last_eat_time;
+	int				*dead_flag;
+	pthread_mutex_t	*l_fork;			// mut excl of the forks
+	pthread_mutex_t	*r_fork;			// mut excl of the forks
+	pthread_mutex_t	*print_lock;		// mut excl when print messages
+	pthread_mutex_t	*eat_lock;			// mut excl when update/read last_time_eat (persnoal)
+	pthread_mutex_t	*dead_lock;			// mut excl to update/read if someone is dead
+}			t_shared;
 
 typedef struct s_philo
 {
+	// private resources
 	int				id;
 	pthread_t		th;
-	struct s_time	*time;
-	int				eat_time;
+	struct s_time	time;				// every philo has its own, so no need of mutex
+	// time was a pointer to monastery
+	int				starting_group;
+
+	// shared resources with monitors
+	int				last_eat_time;
 	int				n_eat;				// n of times the philo eats
+	int				*dead_flag;
 	pthread_mutex_t	*l_fork;			// mut excl of the forks
 	pthread_mutex_t	*r_fork;			// mut excl of the forks
 	pthread_mutex_t	*print_lock;		// mut excl when print messages
@@ -65,23 +83,22 @@ typedef struct s_philo
 
 typedef struct s_monastery
 {
-	// philos
+	// private resources
 	int				n_philo;
-	struct s_philo	**philo;
-	struct s_time	*time;
+	struct s_philo	*philo; // **philo
+	struct s_time	time;
 
-	// dead monitor
 	pthread_t		th_dead_monitor;
-
-	// eat monitor
 	pthread_t		th_eat_monitor;
-	int				*n_eat_status;	// n of times each philo has eaten
 
-	// mutexes
-	pthread_mutex_t	*forks;			// n of mutex == n_philo
-	pthread_mutex_t	print_lock;		// mut excl when print messages (shared between all)
-	pthread_mutex_t	*eat_locks;		// mut excl when update/read last_time_eat (shared between monitor and philo)
-	pthread_mutex_t	dead_lock;		// mut excl to update/read if someone is dead
+
+	// shared
+	int				dead_flag;
+	int				*n_eat_status;		// n of times each philo has eaten
+	pthread_mutex_t	*forks;				// n of mutex == n_philo
+	pthread_mutex_t	print_lock;			// mut excl when print messages (shared between all)
+	pthread_mutex_t	*eat_locks;			// mut excl when update/read last_time_eat (shared between monitor and philo)
+	pthread_mutex_t	dead_lock;			// mut excl to update/read if someone is dead
 
 	// errors
 	int				err_code;
@@ -89,7 +106,7 @@ typedef struct s_monastery
 
 // -------------------------------------------------------------------- PARSING
 int		create_monastery(t_monastery *data, char **argv);
-t_philo	**create_philo(t_monastery *data);
+t_philo	*create_philo(t_monastery *data);
 
 // -------------------------------------------------------------------- THREADS
 int		create_threads(t_monastery *data);
@@ -114,7 +131,7 @@ void	ft_putstr_fd(char *s, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 void	print_single_philo(t_philo *philo);
-void	print_all_philo(t_philo **philo);
+void	print_all_philo(t_monastery *data);
 void	print_tmstmp(t_philo *philo, t_action what, int64_t when);
 
 #endif

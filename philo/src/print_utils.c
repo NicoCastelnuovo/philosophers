@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 09:05:42 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/09 08:43:36 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/10 09:59:25 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,34 +72,37 @@ void	ft_putnbr_fd(int n, int fd)
 
 void	print_single_philo(t_philo *philo)
 {
-
 	if (!philo)
 		return ;
-	printf("__PHILO [%d]__", philo->id + 1);
-	printf("n_eat: [%d]\n\n", philo->n_eat);
+	printf("__PHILO [%d]____", philo->id + 1);
+	printf("%d ", philo->time.to_die);
+	printf("%d ", philo->time.to_eat);
+	printf("%d ", philo->time.to_sleep);
+	printf("%d____", philo->time.eat_limit);
+	printf("n_eat: [%d]\n", philo->n_eat);
 }
 
-void	print_all_philo(t_philo **philo)
+void	print_all_philo(t_monastery *data)
 {
 	int	i;
 
-	if (!philo)
+	if (!data->philo)
 		return ;
 	i = 0;
-	while (philo[i])
+	while (i < data->n_philo)
 	{
-		print_single_philo(philo[i]);
+		print_single_philo(data->philo + i);
 		i++;
 	}
 }
 
 void	print_tmstmp(t_philo *philo, t_action what, int64_t when)
 {
-	int		who;
+	int	who;
 
-	who = philo->id + 1;
+	who = philo->id = 1;
 	pthread_mutex_lock(philo->print_lock);
-	if (!philo->time->dead_flag)
+	if (*(philo->dead_flag) == 0)
 	{
 		if (what == FORK)
 			printf("%llu %d has taken a fork\n", when, who);
