@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 09:05:42 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/10 09:59:25 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/10 15:40:47 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,10 @@ void	print_single_philo(t_philo *philo)
 	if (!philo)
 		return ;
 	printf("__PHILO [%d]____", philo->id + 1);
-	printf("%d ", philo->time.to_die);
-	printf("%d ", philo->time.to_eat);
-	printf("%d ", philo->time.to_sleep);
-	printf("%d____", philo->time.eat_limit);
+	printf("%d ", philo->time->to_die);
+	printf("%d ", philo->time->to_eat);
+	printf("%d ", philo->time->to_sleep);
+	printf("%d____", philo->time->eat_limit);
 	printf("n_eat: [%d]\n", philo->n_eat);
 }
 
@@ -100,10 +100,11 @@ void	print_tmstmp(t_philo *philo, t_action what, int64_t when)
 {
 	int	who;
 
-	who = philo->id = 1;
-	pthread_mutex_lock(philo->print_lock);
+	who = philo->id + 1;
+	pthread_mutex_lock(philo->dead_lock);
 	if (*(philo->dead_flag) == 0)
 	{
+		pthread_mutex_lock(philo->print_lock);
 		if (what == FORK)
 			printf("%llu %d has taken a fork\n", when, who);
 		else if (what == EAT)
@@ -112,6 +113,7 @@ void	print_tmstmp(t_philo *philo, t_action what, int64_t when)
 			printf("%llu %d is sleeping\n", when, who);
 		else if (what == THINK)
 			printf("%llu %d is thinking\n", when, who);
+		pthread_mutex_unlock(philo->print_lock);
 	}
-	pthread_mutex_unlock(philo->print_lock);
+	pthread_mutex_unlock(philo->dead_lock);
 }

@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 11:50:19 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/10 09:55:42 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/10 15:27:24 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,25 +30,25 @@ int64_t	get_abs_time(void)
 	return (s_to_ms + u_to_ms);
 }
 
-// void	accurate_sleep_ms(int64_t time_to_sleep)
-// {
-// 	int64_t	now;
-
-// 	now = get_abs_time();
-// 	while (get_abs_time() < now + time_to_sleep) // 400
-// 		usleep(50); // instead of 400000 sleep 50 * (counter - now)
-// }
-
-void	accurate_sleep_ms(int64_t n)
+void	accurate_sleep_ms(int64_t time_to_sleep)
 {
-	int64_t	now = get_abs_time();
-	int64_t	counter = get_abs_time();
-	while (counter - now < n) // 400
-	{
-		usleep(10); // instead of 400000 sleep 10 * (counter - now)
-		counter = get_abs_time();
-	}
+	int64_t	now;
+
+	now = get_abs_time();
+	while (get_abs_time() < now + time_to_sleep) // 400
+		usleep(10); // instead of 400000 sleep 50 * (counter - now)
 }
+
+// void	accurate_sleep_ms(int64_t n)
+// {
+// 	int64_t	now = get_abs_time();
+// 	int64_t	counter = get_abs_time();
+// 	while (counter - now < n) // 400
+// 	{
+// 		usleep(10); // instead of 400000 sleep 10 * (counter - now)
+// 		counter = get_abs_time();
+// 	}
+// }
 
 /*
 	Returns the current time, in relation to the beginning of the

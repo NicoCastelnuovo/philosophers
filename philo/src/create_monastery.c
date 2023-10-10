@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 11:46:28 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/10 11:08:42 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/10 14:27:41 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,10 @@ static int	create_locks(t_monastery *data)
 
 	if (create_forks(data))
 		return (error(&data->err_code, EMUTEX_INIT, __FILE__, __LINE__));
+
 	if (pthread_mutex_init(&data->dead_lock, NULL))
 		return (error(&data->err_code, EMUTEX_INIT, __FILE__, __LINE__));
+
 	i = 0;
 	data->eat_locks = ft_calloc(data->n_philo, sizeof(pthread_mutex_t));
 	if (!data->eat_locks)
@@ -47,6 +49,7 @@ static int	create_locks(t_monastery *data)
 			return (error(&data->err_code, EMUTEX_INIT, __FILE__, __LINE__));
 		i++;
 	}
+
 	if (pthread_mutex_init(&data->print_lock, NULL))
 		return (error(&data->err_code, EMUTEX_INIT, __FILE__, __LINE__));
 	return (0);
@@ -86,7 +89,7 @@ static int	parse_time(t_monastery *data, char **argv)
 	data->time.to_eat = ft_atoi(argv[3]);
 	data->time.to_sleep = ft_atoi(argv[4]);
 	data->time.clock_start = 0;
-	// eat_imit left
+	// eat_limit left
 	return (0);
 }
 

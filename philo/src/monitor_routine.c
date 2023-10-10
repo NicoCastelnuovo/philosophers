@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 09:27:25 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/10 11:06:09 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/10 15:32:40 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,21 @@ static int	is_philo_dead(t_monastery *data, int i)
 	t_philo *philo;
 
 	philo = data->philo + i;
-	pthread_mutex_lock(data->eat_locks + i);
+	pthread_mutex_lock(philo->eat_lock);
 	if (get_rel_time(data->time.clock_start) - philo->last_eat_time > data->time.to_die) // ????
 	{
-		pthread_mutex_lock(&data->print_lock);
-		printf("%llu %d died\n", get_rel_time(data->time.clock_start) - philo->last_eat_time, i + 1);
-		pthread_mutex_unlock(&data->print_lock);
-
+		pthread_mutex_unlock(philo->eat_lock);
 		pthread_mutex_lock(&data->dead_lock);
 		data->dead_flag = 1;
 		pthread_mutex_unlock(&data->dead_lock);
 
+		pthread_mutex_lock(&data->print_lock);
+		printf("%llu %d died\n", get_rel_time(data->time.clock_start), i + 1);
+		pthread_mutex_unlock(&data->print_lock);
 
-		pthread_mutex_unlock(data->eat_locks + i);
 		return (1);
 	}
-	pthread_mutex_unlock(data->eat_locks + i);
+	pthread_mutex_unlock(philo->eat_lock);
 	return (0);
 }
 
@@ -50,15 +49,17 @@ void	*monitor_routine(void *arg)
 
 	data = (t_monastery *)arg;
 	clock_start = data->time.clock_start;
-	// philo = data->philo;
 	i = 0;
 	while (1)
 	{
-		if (is_philo_dead(data, i)) // data->philo
+		if (is_philo_dead(data, i))
 			break ;
 		i++;
 		if (i == data->n_philo)
+		{
 			i = 0;
+			// usleep(500);
+		}
 	}
 	return (NULL);
 }
