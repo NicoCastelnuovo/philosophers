@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   monitor_routine.c                                  :+:      :+:    :+:   */
+/*   death_monitor.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 09:27:25 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/10 15:50:22 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/10 17:02:31 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int	is_philo_dead(t_monastery *data, int i)
 
 	philo = data->philo + i;
 	pthread_mutex_lock(philo->eat_lock);
-	if (get_rel_time(data->time.clock_start) - philo->last_eat_time > data->time.to_die) // ????
+	if (get_rel_time(data->time.clock_start) - philo->last_eat_time > data->time.to_die) // >= OR >????
 	{
 		pthread_mutex_unlock(philo->eat_lock);
 		pthread_mutex_lock(&data->dead_lock);
@@ -40,7 +40,8 @@ static int	is_philo_dead(t_monastery *data, int i)
 	return (0);
 }
 
-void	*monitor_routine(void *arg)
+
+void	*death_monitor(void *arg)
 {
 	t_monastery	*data;
 	t_philo		*philo;

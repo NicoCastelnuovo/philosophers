@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:58:47 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/10 15:51:47 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/10 17:13:50 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,23 +51,6 @@ static void	share_locks(t_philo *philo, t_monastery *data)
 	philo->dead_lock = &data->dead_lock;
 }
 
-// static int	parse_time(t_philo *philo, t_monastery *data) // doubled, make only one
-// {
-// 	// data->time = ft_calloc(1, sizeof(t_time));
-// 	// if (!data->time)
-// 	// 	return (error(&data->err_code, EMALLOC, __FILE__, __LINE__));
-// 	// data->time->to_die = ft_atoi(argv[2]);
-// 	// data->time->to_eat = ft_atoi(argv[3]);
-// 	// data->time->to_sleep = ft_atoi(argv[4]);
-// 	// data->time->clock_start = 0;
-// 	philo->time.to_die = data->time.to_die;
-// 	philo->time.to_eat = data->time.to_eat;
-// 	philo->time.to_sleep = data->time.to_sleep;
-// 	philo->time.clock_start = 0;
-// 	// eat_limit is left
-// 	return (0);
-// }
-
 static void	parse_philo(int i, t_philo *philo, t_monastery *data)
 {
 	t_philo	*current_philo;
@@ -75,7 +58,6 @@ static void	parse_philo(int i, t_philo *philo, t_monastery *data)
 	current_philo = philo + i;
 	current_philo->id = i;
 	current_philo->time = &data->time;
-	// parse_time(current_philo, data);
 	share_locks(current_philo, data);
 	current_philo->starting_group = is_starting_group(i);
 	current_philo->n_eat = 0;

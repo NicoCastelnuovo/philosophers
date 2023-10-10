@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 11:50:19 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/10 15:50:56 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/10 17:41:55 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	accurate_sleep_ms(int64_t time_to_sleep)
 
 	now = get_abs_time();
 	while (get_abs_time() < now + time_to_sleep) // 400
-		usleep(10); // instead of 400000 sleep 50 * (counter - now)
+		usleep(10); // instead of 400000 sleep 50 * (counter - now) // ?????? 10 or 50
 }
 
 // void	accurate_sleep_ms(int64_t n)

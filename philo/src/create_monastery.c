@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 11:46:28 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/10 15:50:28 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/10 18:40:58 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,23 +83,32 @@ static int	parse_eat_limit(t_monastery *data, char **argv)
 	return (0);
 }
 
-static int	parse_time(t_monastery *data, char **argv)
+// static int	is_valid_input(t_monastery *data)
+// {
+// 	if (data->n_philo <= 0)
+// 		return (1);
+// 	if ()
+// }
+
+static int	parse_input(t_monastery *data, char **argv)
 {
+	data->n_philo = ft_atoi(argv[1]);
 	data->time.to_die = ft_atoi(argv[2]);
 	data->time.to_eat = ft_atoi(argv[3]);
 	data->time.to_sleep = ft_atoi(argv[4]);
 	data->time.clock_start = 0;
 	// eat_limit left
+	// if (!is_valid_input(data))
+	// 	return (error(&data->err_code, EARGV, __FILE__, __LINE__));
 	return (0);
 }
 
 int	create_monastery(t_monastery *data, char **argv)
 {
-	data->n_philo = ft_atoi(argv[1]);
-	if (create_locks(data))
+	if (parse_input(data, argv))
 		return (data->err_code);
 
-	if (parse_time(data, argv))
+	if (create_locks(data))
 		return (data->err_code);
 
 	data->dead_flag = 0;

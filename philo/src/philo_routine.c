@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 15:36:27 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/10 15:47:52 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/10 18:57:10 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ static void	philo_think(t_philo *philo)
 
 	clock_start = philo->time->clock_start;
 	print_tmstmp(philo, THINK, get_rel_time(clock_start));
+	accurate_sleep_ms(1); // odd philos
 }
 
 static void	philo_eat(t_philo *philo)
@@ -49,27 +50,25 @@ void	*philo_routine(void *arg)
 
 	philo = (t_philo *)arg;
 	clock_start = philo->time->clock_start;
-	// if (!philo->starting_group)	// move outside the while(1) // maybe rename to first_turn
-	// {
-	// 	philo_sleep(philo);
-	// 	philo_think(philo);
-	// }
+	if (!philo->starting_group)	// try to remove and start with delay
+		philo_sleep(philo);
 	while (1)
 	{
-		if (philo->id % 2 != 0) // ODD
+		if (philo->id % 2 != 0)
 		{
 			pthread_mutex_lock(philo->r_fork);
 			print_tmstmp(philo, FORK, get_rel_time(clock_start));
 			pthread_mutex_lock(philo->l_fork);
 			print_tmstmp(philo, FORK, get_rel_time(clock_start));
 		}
-		else // EVEN
+		else
 		{
 			pthread_mutex_lock(philo->l_fork);
 			print_tmstmp(philo, FORK, get_rel_time(clock_start));
 			pthread_mutex_lock(philo->r_fork);
 			print_tmstmp(philo, FORK, get_rel_time(clock_start));
 		}
+
 
 
 		philo_eat(philo);
@@ -95,7 +94,6 @@ void	*philo_routine(void *arg)
 			break ;
 		}
 		pthread_mutex_unlock(philo->dead_lock);
-
 
 
 		philo_think(philo);

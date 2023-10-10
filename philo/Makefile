@@ -6,7 +6,7 @@
 #    By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/08 08:58:13 by ncasteln          #+#    #+#              #
-#    Updated: 2023/10/09 13:51:54 by ncasteln         ###   ########.fr        #
+#    Updated: 2023/10/10 18:26:00 by ncasteln         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ SRC = main.c \
 	create_monastery.c \
 	utils.c \
 	print_utils.c \
+	free_mem.c \
 	error.c
 VPATH = ./src/
 OBJS_DIR = ./objs/

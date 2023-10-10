@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 08:57:48 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/10 15:46:07 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/10 18:37:54 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@ int	main(int argc, char **argv)
 {
 	t_monastery	data;
 
-	data.err_code = 0;
-	// parsing !!
+	// parsing && validation
 	if (argc < 5 || argc > 6)
 		return (error(&data.err_code, EARGC, __FILE__, __LINE__));
 
@@ -29,8 +28,6 @@ int	main(int argc, char **argv)
 
 	if (join_threads(&data))
 		return (data.err_code);
-
-	print_all_philo(&data);
 
 	int i = 0;
 	while (i < data.n_philo)

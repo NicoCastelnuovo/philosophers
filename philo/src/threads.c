@@ -6,23 +6,11 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 11:54:23 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/10 15:46:44 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/10 17:13:57 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-// static void	share_clock_start(t_monastery *data)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (i < data->n_philo)
-// 	{
-// 		(data->philo + i)->time.clock_start = data->time.clock_start;
-// 		i++;
-// 	}
-// }
 
 int create_threads(t_monastery *data)
 {
@@ -37,8 +25,9 @@ int create_threads(t_monastery *data)
 	// 	if (pthread_create(&data->th_eat_monitor, NULL, eat_routine, data))
 	// 		return (error(&data->err_code, ECREATE_THREAD, __FILE__, __LINE__));
 	// }
-	if (pthread_create(&data->th_dead_monitor, NULL, monitor_routine, data))
+	if (pthread_create(&data->th_dead_monitor, NULL, death_monitor, data))
 		return (error(&data->err_code, ECREATE_THREAD, __FILE__, __LINE__));
+
 	i = 0;
 	while (i < data->n_philo)
 	{

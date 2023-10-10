@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 08:55:40 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/10 15:46:21 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/10 18:39:31 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,14 @@
 
 // error definitions
 # define EARGC				1
-# define EMALLOC			2
-# define ECREATE_THREAD		3
-# define ETHJOIN			4
-# define EMUTEX_INIT		5
-# define EMUTEX_DESTROY		6
-# define ECREATE_PHILO		7
-# define EGET_TIME			8
+# define EARGV				2
+# define EMALLOC			3
+# define ECREATE_THREAD		4
+# define ETHJOIN			5
+# define EMUTEX_INIT		6
+# define EMUTEX_DESTROY		7
+# define ECREATE_PHILO		8
+# define EGET_TIME			9
 
 // action definition
 typedef enum e_action
@@ -55,7 +56,6 @@ typedef struct s_philo
 	int				id;
 	pthread_t		th;
 	struct s_time	*time;				// every philo has its own, so no need of mutex
-	// time was a pointer to monastery
 	int				starting_group;
 
 	// shared resources with monitors
@@ -99,7 +99,7 @@ t_philo	*create_philo(t_monastery *data);
 int		create_threads(t_monastery *data);
 int		join_threads(t_monastery *data);
 void	*philo_routine(void *arg);
-void	*monitor_routine(void *arg);
+void	*death_monitor(void *arg);
 void	*eat_routine(void *arg);
 
 // ----------------------------------------------------------------------- TIME
@@ -110,6 +110,7 @@ void	accurate_sleep_ms(int64_t n);
 // ---------------------------------------------------------------------- UTILS
 int		ft_atoi(const char *str);
 void	*ft_calloc(size_t len, size_t n_bits);
+void	free_mem(t_monastery *data);
 
 // ---------------------------------------------------------------- PRINT UTILS
 int		error(int *err_store, int err_code, char *file, int line);
