@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 08:57:48 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/10 18:37:54 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/11 12:14:27 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,7 @@ int	main(int argc, char **argv)
 {
 	t_monastery	data;
 
-	// parsing && validation
-	if (argc < 5 || argc > 6)
-		return (error(&data.err_code, EARGC, __FILE__, __LINE__));
-
-	if (create_monastery(&data, argv))
+	if (create_monastery(&data, argc, argv))
 		return (data.err_code);
 
 	if (create_threads(&data))
@@ -29,12 +25,10 @@ int	main(int argc, char **argv)
 	if (join_threads(&data))
 		return (data.err_code);
 
-	int i = 0;
-	while (i < data.n_philo)
-	{
-		if (pthread_mutex_destroy(data.forks + i) != 0)
-			return (error(&data.err_code, EMUTEX_DESTROY, __FILE__, __LINE__));
-		i++;
-	}
+	if (destroy_mutex(&data))
+		return (data.err_code);
+
+	print_all_philo(&data);
+	free_mem(&data);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 11:50:19 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/10 17:41:55 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/11 11:20:59 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,19 +58,3 @@ int64_t	get_rel_time(int64_t clock_start)
 {
 	return (get_abs_time() - clock_start);
 }
-
-
-
-// long	handle_thinking_time(t_philo *philo)
-// {
-// 	long	time_to_think;
-
-// 	pthread_mutex_lock(&philo->general_meal_lock);
-// 	time_to_think = (philo->table->time_to_die - (datetime_now()
-// 				- philo->last_meal) - philo->table->time_to_eat) / 2;
-// 	pthread_mutex_unlock(&philo->general_meal_lock);
-// 	if (time_to_think > 500)
-// 		return (200);
-// 	else
-// 		return (1);
-// }
