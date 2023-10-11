@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 15:36:27 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/11 14:56:58 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/11 16:51:23 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,6 @@ static void	pick_forks(t_philo *philo)
 	}
 }
 
-// static void	philo_think(t_philo *philo)
-// {
-// 	int64_t	clock_start;
-
-// 	clock_start = philo->time->clock_start;
-// 	print_tmstmp(philo, THINK, get_rel_time(clock_start));
-// 	accurate_sleep_ms(philo->time->to_think);
-// }
-
 static void	philo_eat(t_philo *philo)
 {
 	int64_t	clock_start;
@@ -88,10 +79,8 @@ static void	philo_sleep_and_think(t_philo *philo)
 void	*philo_routine(void *arg)
 {
 	t_philo	*philo;
-	int64_t	clock_start;
 
 	philo = (t_philo *)arg;
-	clock_start = philo->time->clock_start;
 	while (1)
 	{
 		pick_forks(philo);
@@ -102,7 +91,7 @@ void	*philo_routine(void *arg)
 		pthread_mutex_unlock(philo->r_fork);
 		philo_sleep_and_think(philo);
 		if (is_end(philo, 0))
-			break;
+			break ;
 	}
 	return (NULL);
 }

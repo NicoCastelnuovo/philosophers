@@ -6,7 +6,7 @@
 #    By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/08 08:58:13 by ncasteln          #+#    #+#              #
-#    Updated: 2023/10/11 11:05:15 by ncasteln         ###   ########.fr        #
+#    Updated: 2023/10/11 15:51:46 by ncasteln         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ FSANITIZE = -fsanitize=thread
 # ------------------------------------------------------------------------- SRC
 SRC = main.c \
 	threads.c \
+	mutex.c \
 	philo_routine.c \
 	monitor_routine.c \
 	time.c \

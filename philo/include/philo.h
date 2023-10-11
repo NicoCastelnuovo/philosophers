@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 08:55:40 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/11 14:57:01 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/11 15:51:09 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,12 @@ typedef struct s_ttable
 }				t_ttable;
 
 /*
-	Information to which each philo has access. Since the philos may not
-	communicate between each other, each one has no access to the info
-	hold by the others.
+	Since the philos may not communicate between each other, each one has
+	no access to the info hold by the others.
+	@param pthread_mutex_t	*print_lock - mutex for printing
+	@param pthread_mutex_t	*eat_time_lock - mutex for last_eat_time
+	@param pthread_mutex_t	*meals_lock - mutex for n_meals
+	@param pthread_mutex_t	*end_lock - mutex for eng_flag
 */
 typedef struct s_philo
 {
@@ -61,12 +64,12 @@ typedef struct s_philo
 	int				last_eat_time;
 	int				n_meals;
 	int				*end_flag;
-	pthread_mutex_t	*l_fork;		// mutex for l_fork
-	pthread_mutex_t	*r_fork;		// mutex for r_fork
-	pthread_mutex_t	*print_lock;	// mutex for printing msgs
-	pthread_mutex_t	*eat_time_lock;	// mutex for last_eat_time
-	pthread_mutex_t	*meals_lock;	// mutex for n_meals
-	pthread_mutex_t	*end_lock;		// mutex for end_flag
+	pthread_mutex_t	*l_fork;
+	pthread_mutex_t	*r_fork;
+	pthread_mutex_t	*print_lock;
+	pthread_mutex_t	*eat_time_lock;
+	pthread_mutex_t	*meals_lock;
+	pthread_mutex_t	*end_lock;
 }				t_philo;
 
 typedef struct s_monastery
@@ -89,10 +92,13 @@ typedef struct s_monastery
 int		create_monastery(t_monastery *data, int argc, char **argv);
 t_philo	*create_philo(t_monastery *data);
 
+// ---------------------------------------------------------------------- MUTEX
+int		create_locks(t_monastery *data);
+int		destroy_mutex(t_monastery *data);
+
 // -------------------------------------------------------------------- THREADS
 int		create_threads(t_monastery *data);
 int		join_threads(t_monastery *data);
-int		destroy_mutex(t_monastery *data);
 void	*philo_routine(void *arg);
 void	*death_monitor(void *arg);
 void	*eat_routine(void *arg);

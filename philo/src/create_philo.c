@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:58:47 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/11 14:57:12 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/11 16:06:00 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 */
 static void	share_forks(t_philo *philo, pthread_mutex_t *forks, int n_philo)
 {
-	if (philo->id == 0) // first philo
+	if (philo->id == 0)
 		philo->l_fork = forks + (n_philo - 1);
 	else
 		philo->l_fork = forks + (philo->id - 1);
