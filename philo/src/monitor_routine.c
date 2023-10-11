@@ -12,6 +12,28 @@
 
 #include "philo.h"
 
+static int	sad_end(t_monastery *data)
+{
+	pthread_mutex_lock(&data->end_lock); // change the stuff passed inside here and the other functions!
+	if (!data->end_flag)
+		data->end_flag = 1;
+	else
+	{
+		pthread_mutex_unlock(&data->end_lock);
+		return (0);
+	}
+	pthread_mutex_unlock(&data->end_lock);
+	return (1);
+}
+
+static int	happy_end(t_monastery *data)
+{
+	pthread_mutex_lock(&data->end_lock);
+	if (!data->end_flag)
+		data->end_flag = 1;
+	pthread_mutex_unlock(&data->end_lock);
+}
+
 static int	is_end_flag_set(t_monastery *data)
 {
 	pthread_mutex_lock(&data->end_lock);
@@ -26,8 +48,8 @@ static int	is_end_flag_set(t_monastery *data)
 
 /*
 	dead_monitor check if the philo is dead. It compares the time_to_die with
-	the moment in which the philo went to sleep or began to eat. If those
-	interval are equal to time_to_die, means that philo died.
+	the personal last_eat_time, raising the end_flag in case someone didn't
+	eat in time.
 */
 static int	is_philo_dead(t_monastery *data, int i)
 {
@@ -40,15 +62,8 @@ static int	is_philo_dead(t_monastery *data, int i)
 	if (get_rel_time(data->time.clock_start) - philo->last_eat_time > data->time.to_die) // >= OR >????
 	{
 		pthread_mutex_unlock(philo->eat_time_lock);
-		pthread_mutex_lock(&data->end_lock);
-		if (!data->end_flag)
-			data->end_flag = 1;
-		// else
-		// {
-		// 	pthread_mutex_unlock(&data->end_lock);
-		// 	return (1);
-		// }
-		pthread_mutex_unlock(&data->end_lock);
+		if (!sad_end(data))
+			return (1);
 		pthread_mutex_lock(&data->print_lock);
 		printf("%llu %d died\n", get_rel_time(data->time.clock_start), i + 1);
 		pthread_mutex_unlock(&data->print_lock);
@@ -79,19 +94,6 @@ void	*death_monitor(void *arg)
 	return (NULL);
 }
 
-static int	everyone_eat(t_monastery *data, int n_done)
-{
-	if (n_done == data->n_philo)
-	{
-		pthread_mutex_lock(&data->end_lock);
-		if (!data->end_flag)
-			data->end_flag = 1;
-		pthread_mutex_unlock(&data->end_lock);
-		return (1);
-	}
-	return (0);
-}
-
 void	*eat_routine(void *arg)
 {
 	t_monastery	*data;
@@ -112,8 +114,11 @@ void	*eat_routine(void *arg)
 		i++;
 		if (i == data->n_philo)
 		{
-			if (everyone_eat(data, n_done))
+			if (n_done == data->n_philo)
+			{
+				happy_end(data);
 				break ;
+			}
 			n_done = 0;
 			i = 0;
 			usleep(450);
