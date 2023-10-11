@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 08:55:40 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/11 12:59:21 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/11 14:57:01 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ typedef struct s_philo
 	int				id;
 	pthread_t		th;
 	struct s_ttable	*time;
-	int				starting_group; // ------------------------------------------------ remove ???
 	int				last_eat_time;
 	int				n_meals;
 	int				*end_flag;
@@ -109,7 +108,7 @@ void	*ft_calloc(size_t len, size_t n_bits);
 void	free_mem(t_monastery *data);
 
 // ---------------------------------------------------------------- PRINT UTILS
-int		error(int *err_store, int err_code, char *file, int line);
+int		error(int *err_store, int err_code);
 void	print_all_philo(t_monastery *data);
 void	print_tmstmp(t_philo *philo, t_action what, int64_t when);
 
