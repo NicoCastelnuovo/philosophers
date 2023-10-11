@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:58:47 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/11 09:39:06 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/11 13:52:33 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,12 @@ static int	is_starting_group(int id)
 // */
 static void	share_forks(t_philo *philo, pthread_mutex_t *forks, int n_philo)
 {
-	// if (n_philo == 1)
 	if (philo->id == 0) // first philo
 		philo->l_fork = forks + (n_philo - 1);
 	else
 		philo->l_fork = forks + (philo->id - 1);
-	philo->r_fork = forks + (philo->id); // right mutex
+	philo->r_fork = forks + (philo->id);
+	// if only 1, the l and r point the same
 }
 
 static void	share_locks(t_philo *philo, t_monastery *data)

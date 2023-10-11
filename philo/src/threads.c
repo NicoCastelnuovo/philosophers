@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 11:54:23 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/11 13:19:39 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/11 13:55:05 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,18 @@ int	join_threads(t_monastery *data)
 		if (pthread_join((data->philo + i)->th, NULL))
 			return (error(&data->err_code, ETHJOIN, __FILE__, __LINE__));
 		else
+			printf("Joined philo[%d]\n", i + 1);
 		i++;
 	}
 	if (pthread_join(data->dead_monitor, NULL))
 		return (error(&data->err_code, ETHJOIN, __FILE__, __LINE__));
+	printf("Joined dead moinitor\n");
 	if (data->time.eat_limit > 0)
 	{
 		if (pthread_join(data->meal_monitor, NULL))
 			return (error(&data->err_code, ETHJOIN, __FILE__, __LINE__));
 	}
+	printf("Joined eat moinitor\n");
 	return (0);
 }
 
