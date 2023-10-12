@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 15:36:27 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/12 13:03:52 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/12 15:11:31 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,22 @@ static int	pick_forks(t_philo *philo)
 	return (0);
 }
 
+static void	leave_forks(t_philo *philo)
+{
+	if (philo->id % 2 != 0)
+	{
+		pthread_mutex_unlock(philo->r_fork);
+		pthread_mutex_unlock(philo->l_fork);
+	}
+	else
+	{
+		pthread_mutex_unlock(philo->l_fork);
+		if (philo->n_meals < 3)
+			accurate_sleep_ms(1, philo->time->clock_start);
+		pthread_mutex_unlock(philo->r_fork);
+	}
+}
+
 static void	philo_eat(t_philo *philo)
 {
 	int64_t	clock_start;
@@ -86,22 +102,6 @@ static void	philo_eat(t_philo *philo)
 	pthread_mutex_lock(philo->meals_lock);
 	philo->n_meals++;
 	pthread_mutex_unlock(philo->meals_lock);
-}
-
-/*
-	If n_philo is odd, each one is forced to think for 1ms, to let the philo
-	with the oldest last_eat_time to pick the fork first.
-*/
-static void	philo_sleep_and_think(t_philo *philo)
-{
-	int64_t	clock_start;
-
-	clock_start = philo->time->clock_start;
-	print_tmstmp(philo, SLEEP, get_rel_time(clock_start));
-	accurate_sleep_ms(philo->time->to_sleep, clock_start);
-	print_tmstmp(philo, THINK, get_rel_time(clock_start));
-	if (philo->n_meals < 5)
-		accurate_sleep_ms(philo->time->to_think, clock_start);
 }
 
 /*
@@ -123,9 +123,10 @@ void	*philo_routine(void *arg)
 		philo_eat(philo);
 		if (is_end(philo, 2))
 			break ;
-		pthread_mutex_unlock(philo->l_fork);
-		pthread_mutex_unlock(philo->r_fork);
-		philo_sleep_and_think(philo);
+		leave_forks(philo);
+		print_tmstmp(philo, SLEEP, get_rel_time(philo->time->clock_start));
+		accurate_sleep_ms(philo->time->to_sleep, philo->time->clock_start);
+		print_tmstmp(philo, THINK, get_rel_time(philo->time->clock_start));
 		if (is_end(philo, 0))
 			break ;
 	}

@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 09:05:42 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/11 16:22:05 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/12 13:14:03 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,13 @@ void	print_tmstmp(t_philo *philo, t_action what, int64_t when)
 	{
 		pthread_mutex_lock(philo->print_lock);
 		if (what == FORK)
-			printf("%llu %d has taken a fork\n", when, who);
+			printf("%lld %d has taken a fork\n", when, who);
 		else if (what == EAT)
-			printf("%llu %d is eating\n", when, who);
+			printf("%lld %d is eating\n", when, who);
 		else if (what == SLEEP)
-			printf("%llu %d is sleeping\n", when, who);
+			printf("%lld %d is sleeping\n", when, who);
 		else if (what == THINK)
-			printf("%llu %d is thinking\n", when, who);
+			printf("%lld %d is thinking\n", when, who);
 		pthread_mutex_unlock(philo->print_lock);
 	}
 	pthread_mutex_unlock(philo->end_lock);
