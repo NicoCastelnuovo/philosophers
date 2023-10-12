@@ -6,20 +6,22 @@
 #    By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/08 08:58:13 by ncasteln          #+#    #+#              #
-#    Updated: 2023/10/11 15:51:46 by ncasteln         ###   ########.fr        #
+#    Updated: 2023/10/12 13:04:28 by ncasteln         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
-CFLAGS = -g -pthread -Wall -Wextra #-Werror #or -lpthread
+CFLAGS = -g -pthread -Wall -Wextra -Werror
 FSANITIZE = -fsanitize=thread
 
 # ------------------------------------------------------------------------- SRC
 SRC = main.c \
+	validation.c \
 	threads.c \
 	mutex.c \
 	philo_routine.c \
-	monitor_routine.c \
+	meal_monitor.c \
+	death_monitor.c \
 	time.c \
 	create_philo.c \
 	create_monastery.c \

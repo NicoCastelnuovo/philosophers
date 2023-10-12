@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 11:50:19 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/11 16:38:53 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/12 12:21:20 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,25 +30,21 @@ int64_t	get_abs_time(void)
 	return (s_to_ms + u_to_ms);
 }
 
-void	accurate_sleep_ms(int64_t time_to_sleep)
+/*
+	The philo has to sleep for action_time (example 200). To do that, instead
+	of doing usleep(200000), it is done in smaller pieces. In every iteration
+	it get_rel_time() so that the interval_end is not overtaken.
+*/
+void	accurate_sleep_ms(int64_t action_time, int64_t clock_start)
 {
-	int64_t	now;
+	int64_t	interval_start;
+	int64_t	interval_end;
 
-	now = get_abs_time();
-	while (get_abs_time() < now + time_to_sleep)
+	interval_start = get_rel_time(clock_start);
+	interval_end = interval_start + action_time;
+	while (get_rel_time(clock_start) < interval_end)
 		usleep(450);
 }
-
-// void	accurate_sleep_ms(int64_t n)
-// {
-// 	int64_t	now = get_abs_time();
-// 	int64_t	counter = get_abs_time();
-// 	while (counter - now < n) // 400
-// 	{
-// 		usleep(10); // instead of 400000 sleep 10 * (counter - now)
-// 		counter = get_abs_time();
-// 	}
-// }
 
 /*
 	Returns the current time, in relation to the beginning of the

@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 08:55:40 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/11 15:51:09 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/12 13:04:20 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 # include <stdio.h>
 # include <string.h>	// memset used in ft_calloc
 
-// error definitions
 # define EARG				1
 # define EMALLOC			2
 # define ECREATE_THREAD		3
@@ -91,6 +90,7 @@ typedef struct s_monastery
 // -------------------------------------------------------------------- PARSING
 int		create_monastery(t_monastery *data, int argc, char **argv);
 t_philo	*create_philo(t_monastery *data);
+int		is_valid_input(char **argv);
 
 // ---------------------------------------------------------------------- MUTEX
 int		create_locks(t_monastery *data);
@@ -102,14 +102,16 @@ int		join_threads(t_monastery *data);
 void	*philo_routine(void *arg);
 void	*death_monitor(void *arg);
 void	*eat_routine(void *arg);
+int		is_end_flag_set(t_monastery *data);
 
 // ----------------------------------------------------------------------- TIME
 int64_t	get_abs_time(void);
 int64_t	get_rel_time(int64_t clock_start);
-void	accurate_sleep_ms(int64_t n);
+void	accurate_sleep_ms(int64_t n, int64_t clock_start);
 
 // ---------------------------------------------------------------------- UTILS
 long	ft_atol(char *str);
+int		ft_isdigit(int c);
 void	*ft_calloc(size_t len, size_t n_bits);
 void	free_mem(t_monastery *data);
 
