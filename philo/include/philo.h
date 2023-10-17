@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 08:55:40 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/12 13:14:18 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/17 08:30:32 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef enum e_action
 	FORK,
 	EAT,
 	SLEEP,
-	THINK,
+	THINK
 }			t_action;
 
 // timetable informations
@@ -42,7 +42,6 @@ typedef struct s_ttable
 	int			to_die;
 	int			to_eat;
 	int			to_sleep;
-	int			to_think;
 	int			eat_limit;
 	int64_t		clock_start;
 }				t_ttable;

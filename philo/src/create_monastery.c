@@ -6,7 +6,7 @@
 /*   By: ncasteln <ncasteln@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 11:46:28 by ncasteln          #+#    #+#             */
-/*   Updated: 2023/10/12 12:59:30 by ncasteln         ###   ########.fr       */
+/*   Updated: 2023/10/17 08:31:20 by ncasteln         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,6 @@ static void	set_ttable(t_monastery *data, char **argv)
 	data->time.eat_limit = -1;
 	if (argv[5])
 		data->time.eat_limit = ft_atol(argv[5]);
-	data->time.to_think = 0;
-	if (data->n_philo % 2)
-		data->time.to_think = 1;
 	data->time.clock_start = 0;
 }
 
