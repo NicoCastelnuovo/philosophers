@@ -41,7 +41,7 @@ Like in any other project of 42, the memory allocated by `malloc()` has to be pr
 1. Clone the repository:
 ```
 git clone https://github.com/ncasteln/42-philosophers.git
-cd philosophers/philo
+cd 42-philosophers
 make
 ```
 2. Run the program with the following arguments:
