@@ -40,7 +40,7 @@ Like in any other project of 42, the memory allocated by `malloc()` has to be pr
 ## Try it out
 1. Clone the repository:
 ```
-git clone git@github.com:ncasteln/42-philosophers.git
+git clone https://github.com/ncasteln/42-philosophers.git
 cd philosophers/philo
 make
 ```
