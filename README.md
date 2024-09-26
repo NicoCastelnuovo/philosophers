@@ -45,10 +45,10 @@ cd 42-philosophers
 make
 ```
 2. Run the program with the following arguments:
+- Number of philosophers sit around the table, from 1 to 200 (5).
 - Time to die: the time a philo can resist before die (800).
 - Time to eat: the time a philo needs to eat its plate of spaghetti, which would be the time he holds the forks (200).
 - Time to sleep: the time a philo needs to sleep (100).
-- Number of philosophers sit around the table, from 1 to 200 (5).
 
 ```
 ./philo 800 200 100 5
